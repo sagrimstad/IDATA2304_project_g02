@@ -1,1 +1,1 @@
-# IDATA2304_project_g02
+# Project in IDATA2304 Computer Communication and Network Programming
