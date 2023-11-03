@@ -10,6 +10,8 @@ import no.ntnu.idata2304.project.greenhouse.Sensor;
 import no.ntnu.idata2304.project.greenhouse.SensorActuatorNode;
 import no.ntnu.idata2304.project.gui.common.ActuatorPane;
 import no.ntnu.idata2304.project.gui.common.SensorPane;
+import no.ntnu.idata2304.project.listeners.common.ActuatorListener;
+import no.ntnu.idata2304.project.listeners.greenhouse.SensorListener;
 
 /**
  * Window with GUI for overview and control of one specific sensor/actuator node.
