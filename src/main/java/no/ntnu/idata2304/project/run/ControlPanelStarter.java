@@ -3,6 +3,7 @@ package no.ntnu.idata2304.project.run;
 import no.ntnu.idata2304.project.controlpanel.CommunicationChannel;
 import no.ntnu.idata2304.project.controlpanel.ControlPanelLogic;
 import no.ntnu.idata2304.project.controlpanel.FakeCommunicationChannel;
+import no.ntnu.idata2304.project.controlpanel.RealCommunicationChannel;
 import no.ntnu.idata2304.project.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.idata2304.project.tools.Logger;
 
@@ -55,6 +56,8 @@ public class ControlPanelStarter {
   }
 
   private CommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
+    RealCommunicationChannel spawner = new RealCommunicationChannel(logic);
+    logic.setCommunicationChannel(spawner);
     // TODO - here you initiate TCP/UDP socket communication
     // You communication class(es) may want to get reference to the logic and call necessary
     // logic methods when events happen (for example, when sensor data is received)
