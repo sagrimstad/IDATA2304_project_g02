@@ -16,7 +16,7 @@ import no.ntnu.idata2304.project.message.Message;
  */
 public class Server {
 
-  public static final int PORT_NUMBER = 1235;
+  public static final int PORT_NUMBER = 1337;
   private final ControlPanelLogic logic;
   boolean isServerRunning;
   private final List<ClientHandler> connectedClients = new ArrayList<>();
