@@ -39,7 +39,7 @@ public class Server {
       System.out.println("Server listening of port " + PORT_NUMBER);
       isServerRunning = true;
       while (isServerRunning) {
-        ClientHandler clientHandler = acceptNextCLientConnection(listeningSocket);
+        ClientHandler clientHandler = acceptNextClientConnection(listeningSocket);
         if (clientHandler != null) {
           connectedClients.add(clientHandler);
           clientHandler.start();
@@ -69,7 +69,7 @@ public class Server {
    * @param listeningSocket A specified listening socket.
    * @return The client handler for a client after the connection to the client has been accepted.
    */
-  private ClientHandler acceptNextCLientConnection(ServerSocket listeningSocket) {
+  private ClientHandler acceptNextClientConnection(ServerSocket listeningSocket) {
     ClientHandler clientHandler = null;
     try {
       Socket clientSocket = listeningSocket.accept();

@@ -1,7 +1,13 @@
 # Protocol
-This document describes the protocol used in the simulated greenhouse...
+This document describes the protocol used in the simulated greenhouse. The greenhouse consists of
+different actuators and nodes that detects changes in the environment inside the greenhouse. These
+actuators and nodes connect to different control panels that gets the information over the network
+and can see the different temperatures, humidity, etc. inside the greenhouse. From the control 
+panels, one can operate these actuators and perform different task to change the different 
+variables inside.
 
 ## Terminology
+Actuators, Nodes, control panel, server
 
 ## Transport
 This application uses TCP for its communication. TCP (Transmission Control Protocol)
