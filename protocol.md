@@ -13,11 +13,23 @@ Actuators, Nodes, control panel, server
 This application uses TCP for its communication. TCP (Transmission Control Protocol)
 
 ## Used port numbers
-1337
+Server port: 1337
 
 ## Architecture
-- Servers: One separate Server that is used for communication between each client.
-- Clients: Each control panel and nodes are clients.
+Servers: 
+- One dedicated server hosted centrally in the greenhouse.
+- Responsible for: Receiving data from sensors, processing that data, 
+accepting new commands from the control panel and sending those commands to the actuators.
+
+Clients: 
+1. Sensors/Actuators:
+- Collect data (temperature, humidity etc.) and sending it to the server at either intervals or when 
+a change is registered.
+- Receive commands from the server to perform actions (opening windows, activating fans etc.)
+
+2. Control Panels:
+- Interface for a user to visualize real-time data from the sensors.
+- Sending commands to the server based on user input.
 
 ## Information flow
 1. All sensors and actuator nodes connects to the main Server.
