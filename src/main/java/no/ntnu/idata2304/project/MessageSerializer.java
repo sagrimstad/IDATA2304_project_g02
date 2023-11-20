@@ -3,41 +3,52 @@ package no.ntnu.idata2304.project;
 import no.ntnu.idata2304.project.message.Message;
 
 /**
- * Serializers message to protocol-defined strings and vice versa.
+ * Serializes messages to protocol-defined strings and vice versa.
  */
 public class MessageSerializer {
-  //TODO: add messages when protocol is defined.
 
+  public static final String CHANNEL_COUNT_COMMAND = "c";
+  public static final String TURN_ON_COMMAND = "1";
+  public static final String TURN_OFF_COMMAND = "0";
+  public static final String GET_CHANNEL_COMMAND = "g";
+  public static final String SET_CHANNEL_COMMAND = "s";
+  public static final String CHANNEL_COUNT_MESSAGE = "N";
+  public static final String ERROR_MESSAGE = "e";
+  public static final String CURRENT_CHANNEL_MESSAGE = "C";
+  public static final String TV_STATE_ON_MESSAGE = "TVON";
+  public static final String TV_STATE_OFF_MESSAGE = "TVoff";
+
+  /**
+   * Not allowed to instantiate this utility class.
+   */
   private MessageSerializer() {
     // Intentionally left blank.
   }
 
+  /**
+   * Create message from a string, according to the communication protocol.
+   *
+   * @param s The string sent over the communication channel
+   * @return The logical message, as interpreted according to the protocol
+   */
   public static Message fromString(String s) {
-    Message message = null;
+    Message m = null;
     if (s != null) {
       switch (s) {
-        //TODO: finish switch case when protocol is defined.
         default -> {
           if (s.length() > 1) {
-            message = parseParametrizedMessage(s);
+            m = parseParametrizedMessage(s);
           }
         }
       }
     }
-  }
-
-  private static Message parseParametrizedMessage(String s) {
-    Message m = null;
-    //TODO: finish method when protocol is defined.
     return m;
   }
 
-  /**
-   * Returns an Integer from a wanted String.
-   *
-   * @param s the string wanted to be converted.
-   * @return the desired Integer.
-   */
+  private static Message parseParametrizedMessage(String s) {
+    return null;
+  }
+
   private static Integer parseInteger(String s) {
     Integer i = null;
     try {
@@ -51,12 +62,10 @@ public class MessageSerializer {
   /**
    * Convert a message to a serialized string.
    *
-   * @param message the message to translate.
-   * @return String representation of the message.
+   * @param m The message to translate
+   * @return String representation of the message
    */
-  public static String toString(Message message) {
-    String s = null;
-    //TODO: finish method when protocol is defined.
-    return s;
+  public static String toString(Message m) {
+    return null;
   }
 }

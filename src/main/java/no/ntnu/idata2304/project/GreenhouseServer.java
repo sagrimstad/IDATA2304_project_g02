@@ -14,7 +14,7 @@ import no.ntnu.idata2304.project.message.Message;
  * @author Group 2
  * @version v1.0 (2023.11.10)
  */
-public class Server {
+public class GreenhouseServer {
 
   public static final int PORT_NUMBER = 1337;
   private final ControlPanelLogic logic;
@@ -26,7 +26,7 @@ public class Server {
    *
    * @param logic the logic to be used in the greenhouse
    */
-  public Server(ControlPanelLogic logic) {
+  public GreenhouseServer(ControlPanelLogic logic) {
     this.logic = logic;
   }
 
@@ -39,7 +39,7 @@ public class Server {
       System.out.println("Server listening of port " + PORT_NUMBER);
       isServerRunning = true;
       while (isServerRunning) {
-        ClientHandler clientHandler = acceptNextCLientConnection(listeningSocket);
+        ClientHandler clientHandler = acceptNextClientConnection(listeningSocket);
         if (clientHandler != null) {
           connectedClients.add(clientHandler);
           clientHandler.start();
@@ -69,7 +69,7 @@ public class Server {
    * @param listeningSocket A specified listening socket.
    * @return The client handler for a client after the connection to the client has been accepted.
    */
-  private ClientHandler acceptNextCLientConnection(ServerSocket listeningSocket) {
+  private ClientHandler acceptNextClientConnection(ServerSocket listeningSocket) {
     ClientHandler clientHandler = null;
     try {
       Socket clientSocket = listeningSocket.accept();
