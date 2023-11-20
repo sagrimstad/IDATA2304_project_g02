@@ -1,12 +1,17 @@
 package no.ntnu.idata2304.project.controlpanel;
 
+import static no.ntnu.idata2304.project.GreenhouseServer.PORT_NUMBER;
 import static no.ntnu.idata2304.project.tools.Parser.parseDoubleOrError;
 import static no.ntnu.idata2304.project.tools.Parser.parseIntegerOrError;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import no.ntnu.idata2304.project.greenhouse.Actuator;
-import no.ntnu.idata2304.project.greenhouse.Sensor;
 import no.ntnu.idata2304.project.greenhouse.SensorReading;
 import no.ntnu.idata2304.project.tools.Logger;
 
@@ -16,6 +21,7 @@ import no.ntnu.idata2304.project.tools.Logger;
 public class RealCommunicationChannel implements CommunicationChannel {
 
   private final ControlPanelLogic logic;
+  private Socket socket;
 
   /**
    * Creates a communication channel.
@@ -24,6 +30,42 @@ public class RealCommunicationChannel implements CommunicationChannel {
    */
   public RealCommunicationChannel(ControlPanelLogic logic) {
     this.logic = logic;
+    this.socket = null;
+  }
+
+  /**
+   * Spawn a new sensor/actuator node information after a given delay.
+   *
+   * @param specification A (temporary) manual configuration of the node in the following format
+   *                      [nodeId] semicolon [actuator_count_1] underscore [actuator_type_1] space
+   *                      ... space [actuator_count_M] underscore [actuator_type_M]
+   * @param delay         Delay in seconds
+   */
+  public void spawnNode(String specification, int delay) {
+    SensorActuatorNodeInfo nodeInfo = createSensorNodeInfoFrom(specification);
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        logic.onNodeAdded(nodeInfo);
+      }
+    }, delay * 1000L);
+  }
+
+  private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {
+    if (specification == null || specification.isEmpty()) {
+      throw new IllegalArgumentException("Node specification can't be empty");
+    }
+    String[] parts = specification.split(";");
+    if (parts.length > 3) {
+      throw new IllegalArgumentException("Incorrect specification format");
+    }
+    int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
+    SensorActuatorNodeInfo info = new SensorActuatorNodeInfo(nodeId);
+    if (parts.length == 2) {
+      parseActuators(parts[1], info);
+    }
+    return info;
   }
 
   private void parseActuators(String actuatorSpecification, SensorActuatorNodeInfo info) {
@@ -48,24 +90,67 @@ public class RealCommunicationChannel implements CommunicationChannel {
     }
   }
 
-  public void advertiseSensorData(String specification) {
+  /**
+   * Advertise that a node is removed.
+   *
+   * @param nodeId ID of the removed node
+   * @param delay  Delay in seconds
+   */
+  public void advertiseRemovedNode(int nodeId, int delay) {
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        logic.onNodeRemoved(nodeId);
+      }
+    }, delay * 1000L);
+  }
+
+  /**
+   * Advertise that an actuator has changed it's state.
+   *
+   * @param nodeId     ID of the node to which the actuator is attached
+   * @param actuatorId ID of the actuator.
+   * @param on         When true, actuator is on; off when false.
+   * @param delay      The delay in seconds after which the advertisement will be generated
+   */
+  public void advertiseActuatorState(int nodeId, int actuatorId, boolean on, int delay) {
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        logic.onActuatorStateChanged(nodeId, actuatorId, on);
+      }
+    }, delay * 1000L);
+  }
+
+  /**
+   * Advertise new sensor readings.
+   *
+   * @param specification Specification of the readings in the following format: [nodeID] semicolon
+   *                      [sensor_type_1] equals [sensor_value_1] space [unit_1] comma ... comma
+   *                      [sensor_type_N] equals [sensor_value_N] space [unit_N]
+   * @param delay         Delay in seconds
+   */
+  public void advertiseSensorData(String specification, int delay) {
     if (specification == null || specification.isEmpty()) {
-      throw new IllegalArgumentException("Sensor specification can't be null or empty");
+      throw new IllegalArgumentException("Sensor specification can't be empty");
     }
     String[] parts = specification.split(";");
     if (parts.length != 2) {
       throw new IllegalArgumentException("Incorrect specification format: " + specification);
     }
-    int nodeID = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
+    int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
     List<SensorReading> sensors = parseSensors(parts[1]);
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        logic.onSensorData(nodeId, sensors);
+      }
+    }, delay * 1000L);
   }
 
-  /**
-   * Parses a sensor reading, seperated by ",", into a new reading.
-   *
-   * @param sensorInfo the information to parse.
-   * @return the parsed reading.
-   */
   private List<SensorReading> parseSensors(String sensorInfo) {
     List<SensorReading> readings = new LinkedList<>();
     String[] readingInfo = sensorInfo.split(",");
@@ -75,12 +160,6 @@ public class RealCommunicationChannel implements CommunicationChannel {
     return readings;
   }
 
-  /**
-   * Parses a reading, seperated by a "=" sign, into a type, value and unit.
-   *
-   * @param reading the line of text wanted to parse.
-   * @return a new {@link SensorReading} object with the new values and units.
-   */
   private SensorReading parseReading(String reading) {
     String[] assignmentParts = reading.split("=");
     if (assignmentParts.length != 2) {
@@ -96,13 +175,6 @@ public class RealCommunicationChannel implements CommunicationChannel {
     return new SensorReading(sensorType, value, unit);
   }
 
-  /**
-   * Sending an actuator change.
-   *
-   * @param nodeId     ID of the node to which the actuator is attached
-   * @param actuatorId Node-wide unique ID of the actuator
-   * @param isOn       When true, actuator must be turned on; off when false.
-   */
   @Override
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
     String state = isOn ? "ON" : "off";
@@ -112,6 +184,13 @@ public class RealCommunicationChannel implements CommunicationChannel {
 
   @Override
   public boolean open() {
-    return false;
+    boolean success = false;
+    try {
+      this.socket = new Socket("localhost", PORT_NUMBER);
+      success = true;
+    } catch (IOException e) {
+      // TODO Handle exception
+    }
+    return success;
   }
 }
