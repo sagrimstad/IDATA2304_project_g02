@@ -14,7 +14,7 @@ import no.ntnu.idata2304.project.message.Message;
  * @author Group 2
  * @version v1.0 (2023.11.10)
  */
-public class Server {
+public class GreenhouseServer {
 
   public static final int PORT_NUMBER = 1337;
   private final ControlPanelLogic logic;
@@ -26,7 +26,7 @@ public class Server {
    *
    * @param logic the logic to be used in the greenhouse
    */
-  public Server(ControlPanelLogic logic) {
+  public GreenhouseServer(ControlPanelLogic logic) {
     this.logic = logic;
   }
 

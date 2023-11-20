@@ -21,7 +21,7 @@ public class ClientHandler extends Thread {
   private final Socket socket;
   private final BufferedReader socketReader;
   private final PrintWriter socketWriter;
-  private final Server server;
+  private final GreenhouseServer server;
 
   /**
    * Create a new client handler.
@@ -30,7 +30,7 @@ public class ClientHandler extends Thread {
    * @param server References to the main Server class
    * @throws IOException When something goes wrong with establishing the input or output streams.
    */
-  public ClientHandler(Socket socket, Server server) throws IOException {
+  public ClientHandler(Socket socket, GreenhouseServer server) throws IOException {
     this.server = server;
     this.socket = socket;
     this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));

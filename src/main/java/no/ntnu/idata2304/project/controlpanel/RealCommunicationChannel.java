@@ -22,44 +22,50 @@ public class RealCommunicationChannel implements CommunicationChannel {
    *
    * @param logic the application logic of the control panel node.
    */
-public RealCommunicationChannel(ControlPanelLogic logic) {
+  public RealCommunicationChannel(ControlPanelLogic logic) {
     this.logic = logic;
-}
+  }
 
-private void parseActuators(String actuatorSpecification, SensorActuatorNodeInfo info) {
-  String[] parts = actuatorSpecification.split(" ");
-  for (String part : parts) {
-    parseActuatorInfo(part, info);
+  private void parseActuators(String actuatorSpecification, SensorActuatorNodeInfo info) {
+    String[] parts = actuatorSpecification.split(" ");
+    for (String part : parts) {
+      parseActuatorInfo(part, info);
+    }
   }
-}
 
-private void parseActuatorInfo(String s, SensorActuatorNodeInfo info) {
-  String[] actuatorInfo = s.split("_");
-  if (actuatorInfo.length != 2) {
-    throw new IllegalArgumentException("Invalid actuator info format: " + s);
+  private void parseActuatorInfo(String s, SensorActuatorNodeInfo info) {
+    String[] actuatorInfo = s.split("_");
+    if (actuatorInfo.length != 2) {
+      throw new IllegalArgumentException("Invalid actuator info format: " + s);
+    }
+    int actuatorCount = parseIntegerOrError(actuatorInfo[0],
+        "Invalid actuator count: " + actuatorInfo[0]);
+    String actuatorType = actuatorInfo[1];
+    for (int i = 0; i < actuatorCount; ++i) {
+      Actuator actuator = new Actuator(actuatorType, info.getId());
+      actuator.setListener(logic);
+      info.addActuator(actuator);
+    }
   }
-  int actuatorCount = parseIntegerOrError(actuatorInfo[0],
-      "Invalid actuator count: " + actuatorInfo[0]);
-  String actuatorType = actuatorInfo[1];
-  for (int i = 0; i < actuatorCount; ++i) {
-    Actuator actuator = new Actuator(actuatorType, info.getId());
-    actuator.setListener(logic);
-    info.addActuator(actuator);
-  }
-}
 
-public void advertiseSensorData(String specification) {
-  if (specification == null || specification.isEmpty()) {
-    throw new IllegalArgumentException("Sensor specification can't be null or empty");
+  public void advertiseSensorData(String specification) {
+    if (specification == null || specification.isEmpty()) {
+      throw new IllegalArgumentException("Sensor specification can't be null or empty");
+    }
+    String[] parts = specification.split(";");
+    if (parts.length != 2) {
+      throw new IllegalArgumentException("Incorrect specification format: " + specification);
+    }
+    int nodeID = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
+    List<SensorReading> sensors = parseSensors(parts[1]);
   }
-  String[] parts = specification.split(";");
-  if (parts.length != 2) {
-    throw new IllegalArgumentException("Incorrect specification format: " + specification);
-  }
-  int nodeID = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
-  List<SensorReading> sensors = parseSensors(parts[1]);
-}
 
+  /**
+   * Parses a sensor reading, seperated by ",", into a new reading.
+   *
+   * @param sensorInfo the information to parse.
+   * @return the parsed reading.
+   */
   private List<SensorReading> parseSensors(String sensorInfo) {
     List<SensorReading> readings = new LinkedList<>();
     String[] readingInfo = sensorInfo.split(",");
@@ -69,6 +75,12 @@ public void advertiseSensorData(String specification) {
     return readings;
   }
 
+  /**
+   * Parses a reading, seperated by a "=" sign, into a type, value and unit.
+   *
+   * @param reading the line of text wanted to parse.
+   * @return a new {@link SensorReading} object with the new values and units.
+   */
   private SensorReading parseReading(String reading) {
     String[] assignmentParts = reading.split("=");
     if (assignmentParts.length != 2) {
@@ -95,7 +107,7 @@ public void advertiseSensorData(String specification) {
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
     String state = isOn ? "ON" : "off";
     Logger.info("Sending command to greenhouse: turn " + state + " actuator"
-    + "[" + actuatorId + "] on node " + nodeId);
+        + "[" + actuatorId + "] on node " + nodeId);
   }
 
   @Override
