@@ -31,6 +31,11 @@ a change is registered.
 - Interface for a user to visualize real-time data from the sensors.
 - Sending commands to the server based on user input.
 
+ALTERNATIVE ARCHITECTURE
+Each control panel is a client, and the greenhouse as a whole is the server. The greenhouse
+contains a map of all sensor/actuator nodes, which again contains lists off all sensors and
+actuators.
+
 ## Information flow
 1. All sensors and actuator nodes connects to the main Server.
 2. Control panels connects the Server.
