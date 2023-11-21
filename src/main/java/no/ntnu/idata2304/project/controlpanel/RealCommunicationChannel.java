@@ -189,7 +189,7 @@ public class RealCommunicationChannel implements CommunicationChannel {
       this.socket = new Socket("localhost", PORT_NUMBER);
       success = true;
     } catch (IOException e) {
-      // TODO Handle exception
+      Logger.error("Could not open communication channel");
     }
     return success;
   }
