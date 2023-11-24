@@ -1,6 +1,6 @@
 package no.ntnu.idata2304.project.controlpanel;
 
-import static no.ntnu.idata2304.project.GreenhouseServer.PORT_NUMBER;
+import static no.ntnu.idata2304.project.greenhouse.GreenhouseServer.PORT_NUMBER;
 import static no.ntnu.idata2304.project.tools.Parser.parseDoubleOrError;
 import static no.ntnu.idata2304.project.tools.Parser.parseIntegerOrError;
 

@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+
+import no.ntnu.idata2304.project.greenhouse.GreenhouseServer;
 import no.ntnu.idata2304.project.message.Command;
 import no.ntnu.idata2304.project.message.CurrentChannelMessage;
 import no.ntnu.idata2304.project.message.Message;

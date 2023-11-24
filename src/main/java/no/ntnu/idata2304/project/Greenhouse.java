@@ -1,6 +1,7 @@
 package no.ntnu.idata2304.project;
 
 import no.ntnu.idata2304.project.controlpanel.ControlPanelLogic;
+import no.ntnu.idata2304.project.greenhouse.GreenhouseServer;
 
 /**
  * Runs the Greenhouse logic and server.

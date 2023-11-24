@@ -1,10 +1,12 @@
-package no.ntnu.idata2304.project;
+package no.ntnu.idata2304.project.greenhouse;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+
+import no.ntnu.idata2304.project.ClientHandler;
 import no.ntnu.idata2304.project.controlpanel.ControlPanelLogic;
 import no.ntnu.idata2304.project.message.Message;
 
