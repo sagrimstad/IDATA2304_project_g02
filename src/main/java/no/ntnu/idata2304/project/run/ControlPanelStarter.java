@@ -1,8 +1,8 @@
 package no.ntnu.idata2304.project.run;
 
-import no.ntnu.idata2304.project.CommunicationChannel;
 import no.ntnu.idata2304.project.controlpanel.ControlPanelLogic;
 import no.ntnu.idata2304.project.controlpanel.FakeCommunicationChannel;
+import no.ntnu.idata2304.project.controlpanel.CommunicationChannel;
 import no.ntnu.idata2304.project.controlpanel.ControlPanelCommunicationChannel;
 import no.ntnu.idata2304.project.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.idata2304.project.tools.Logger;

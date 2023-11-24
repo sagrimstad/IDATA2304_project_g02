@@ -12,7 +12,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import no.ntnu.idata2304.project.CommunicationChannel;
+import no.ntnu.idata2304.project.controlpanel.CommunicationChannel;
 import no.ntnu.idata2304.project.controlpanel.ControlPanelLogic;
 import no.ntnu.idata2304.project.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.idata2304.project.greenhouse.Actuator;

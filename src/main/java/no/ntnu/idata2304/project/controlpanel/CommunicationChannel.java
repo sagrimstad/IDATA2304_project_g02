@@ -1,4 +1,4 @@
-package no.ntnu.idata2304.project;
+package no.ntnu.idata2304.project.controlpanel;
 
 /**
  * A communication channel for disseminating control commands to the sensor nodes (sending commands
