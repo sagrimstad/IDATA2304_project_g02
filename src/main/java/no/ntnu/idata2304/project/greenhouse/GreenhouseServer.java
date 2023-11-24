@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.ntnu.idata2304.project.ClientHandler;
-import no.ntnu.idata2304.project.controlpanel.ControlPanelLogic;
 import no.ntnu.idata2304.project.message.Message;
 
 /**
@@ -19,17 +18,14 @@ import no.ntnu.idata2304.project.message.Message;
 public class GreenhouseServer {
 
   public static final int PORT_NUMBER = 1337;
-  private final ControlPanelLogic logic;
   boolean isServerRunning;
   private final List<ClientHandler> connectedClients = new ArrayList<>();
 
   /**
-   * Constructs an instance of the Server class.
-   *
-   * @param logic the logic to be used in the greenhouse
+   * Constructs an instance of the GreenhouseServer class.
    */
-  public GreenhouseServer(ControlPanelLogic logic) {
-    this.logic = logic;
+  public GreenhouseServer() {
+    // Intentionally left blank
   }
 
   /**
@@ -84,15 +80,6 @@ public class GreenhouseServer {
   }
 
   /**
-   * Returns the associated control panel logic.
-   *
-   * @return the control panel logic.
-   */
-  public ControlPanelLogic getLogic() {
-    return this.logic;
-  }
-
-  /**
    * Send a message to all currently connected clients.
    *
    * @param message the message to send.
@@ -111,5 +98,4 @@ public class GreenhouseServer {
   public void clientDisconnected(ClientHandler clientHandler) {
     this.connectedClients.remove(clientHandler);
   }
-
 }
