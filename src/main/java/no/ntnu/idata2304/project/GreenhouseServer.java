@@ -91,7 +91,7 @@ public class GreenhouseServer {
   }
 
   /**
-   * Send a message eto all currently connected clients.
+   * Send a message to all currently connected clients.
    *
    * @param message the message to send.
    */
