@@ -1,4 +1,4 @@
-package no.ntnu.idata2304.project.message;
+package no.ntnu.idata2304.project.message.command;
 
 import no.ntnu.idata2304.project.controlpanel.ControlPanelLogic;
 import no.ntnu.idata2304.project.message.Message;
