@@ -20,10 +20,10 @@ import no.ntnu.idata2304.project.message.StateMessage;
  */
 public class ClientHandler extends Thread {
 
-  private final Socket socket;
-  private final BufferedReader socketReader;
-  private final PrintWriter socketWriter;
   private final GreenhouseServer server;
+  private final Socket socket;
+  private final PrintWriter socketWriter;
+  private final BufferedReader socketReader;
 
   /**
    * Create a new client handler.
@@ -32,11 +32,11 @@ public class ClientHandler extends Thread {
    * @param server References to the main Server class
    * @throws IOException When something goes wrong with establishing the input or output streams.
    */
-  public ClientHandler(Socket socket, GreenhouseServer server) throws IOException {
+  public ClientHandler(GreenhouseServer server, Socket socket) throws IOException {
     this.server = server;
     this.socket = socket;
-    this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
     this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
+    this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
   }
 
   /**
@@ -44,25 +44,36 @@ public class ClientHandler extends Thread {
    */
   @Override
   public void run() {
-    Message response;
+    String response;
     do {
-      Command clientCommand = readClientRequest();
-      if (clientCommand != null) {
-        System.out.println("Received a " + clientCommand.getClass().getSimpleName());
-        response = clientCommand.execute(server.getLogic());
-        if (response != null) {
-          if (isBroadcastMessage(response)) {
-            this.server.sendResponseToAllClients(response);
-          } else {
-            sendToClient(response);
-          }
-        }
+      String clientRequest = this.readClientRequest();
+      if (clientRequest != null) {
+        Logger.info("Received " + clientRequest);
+        response = "OK";
+        this.sendToClient(response);
       } else {
         response = null;
       }
     } while (response != null);
-    System.out.println("Client " + this.socket.getRemoteSocketAddress() + " leaving");
-    this.server.clientDisconnected(this);
+    // Message response;
+    // do {
+    //   Command clientCommand = readClientRequest();
+    //   if (clientCommand != null) {
+    //     System.out.println("Received a " + clientCommand.getClass().getSimpleName());
+    //     response = clientCommand.execute(server.getLogic());
+    //     if (response != null) {
+    //       if (isBroadcastMessage(response)) {
+    //         this.server.sendResponseToAllClients(response);
+    //       } else {
+    //         sendToClient(response);
+    //       }
+    //     }
+    //   } else {
+    //     response = null;
+    //   }
+    // } while (response != null);
+    // System.out.println("Client " + this.socket.getRemoteSocketAddress() + " leaving");
+    // this.server.clientDisconnected(this);
   }
 
   private boolean isBroadcastMessage(Message response) {
@@ -75,21 +86,29 @@ public class ClientHandler extends Thread {
    *
    * @return the received client message, or null on error.
    */
-  private Command readClientRequest() {
-    Message clientCommand = null;
+  private String readClientRequest() {
+    String clientRequest;
     try {
-      String rawClientRequest = this.socketReader.readLine();
-      clientCommand = MessageSerializer.fromString(rawClientRequest);
-      if (!(clientCommand instanceof Command)) {
-        if (clientCommand != null) {
-          System.err.println("Wrong message form the client: " + clientCommand);
-        }
-        clientCommand = null;
-      }
+      clientRequest = this.socketReader.readLine();
     } catch (IOException e) {
-      System.err.println("Could not recieve client request: " + e.getMessage());
+      clientRequest = null;
+      Logger.error("Could not receive client request");
     }
-    return (Command) clientCommand;
+    return clientRequest;
+    // Message clientCommand = null;
+    // try {
+    //   String rawClientRequest = this.socketReader.readLine();
+    //   clientCommand = MessageSerializer.fromString(rawClientRequest);
+    //   if (!(clientCommand instanceof Command)) {
+    //     if (clientCommand != null) {
+    //       System.err.println("Wrong message form the client: " + clientCommand);
+    //     }
+    //     clientCommand = null;
+    //   }
+    // } catch (IOException e) {
+    //   System.err.println("Could not recieve client request: " + e.getMessage());
+    // }
+    // return (Command) clientCommand;
   }
 
   /**
@@ -97,7 +116,7 @@ public class ClientHandler extends Thread {
    *
    * @param message the message to send to the client.
    */
-  public void sendToClient(Message message) {
-    this.socketWriter.println(MessageSerializer.toString(message));
+  public void sendToClient(String message) {
+    this.socketWriter.println(message);
   }
 }

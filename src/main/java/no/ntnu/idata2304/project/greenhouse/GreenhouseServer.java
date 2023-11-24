@@ -72,7 +72,7 @@ public class GreenhouseServer {
     try {
       Socket clientSocket = listeningSocket.accept();
       System.out.println("New client connected from " + clientSocket.getRemoteSocketAddress());
-      clientHandler = new ClientHandler(clientSocket, this);
+      clientHandler = new ClientHandler(this, clientSocket);
     } catch (IOException e) {
       System.err.println("Could not accept client connection: " + e.getMessage());
     }
