@@ -12,3 +12,11 @@ consistently.
 
 The only thing we think we could improve, is the amount of time and effort put into the project.
 But this should not be a problem, now that we are able to prioritize it.
+
+## Week 2
+
+The progress didn't go quite as planned. The main problem is that we are struggling to get the hang of the project.
+We have worked the planned hours, but the project is progressing slowly or barely at all.
+
+Going forward, further understanding and staring to see progress is the main objective of the next sprint. We need
+small and meaningful progression to stay motivated.
