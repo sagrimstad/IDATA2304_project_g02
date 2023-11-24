@@ -6,8 +6,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.ntnu.idata2304.project.ClientHandler;
 import no.ntnu.idata2304.project.message.Message;
+import no.ntnu.idata2304.project.tools.ClientHandler;
 
 /**
  * Handles the TCP server socket(s).

@@ -1,4 +1,4 @@
-package no.ntnu.idata2304.project;
+package no.ntnu.idata2304.project.tools;
 
 import java.io.BufferedReader;
 import java.io.IOException;
