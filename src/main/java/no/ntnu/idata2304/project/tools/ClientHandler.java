@@ -55,6 +55,8 @@ public class ClientHandler extends Thread {
         response = null;
       }
     } while (response != null);
+    Logger.info("Client " + this.socket.getRemoteSocketAddress() + " leaving");
+    this.server.clientDisconnected(this);
     // Message response;
     // do {
     //   Command clientCommand = readClientRequest();

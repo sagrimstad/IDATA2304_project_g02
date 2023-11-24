@@ -84,7 +84,7 @@ public class GreenhouseServer {
    *
    * @param message the message to send.
    */
-  public void sendResponseToAllClients(Message message) {
+  public void sendResponseToAllClients(String message) {
     for (ClientHandler clientHandler : this.connectedClients) {
       clientHandler.sendToClient(message);
     }
