@@ -21,7 +21,7 @@ import no.ntnu.idata2304.project.tools.Logger;
 /**
  * Represents a real communication channel.
  */
-public class ControlPanelCommunicationChannel implements CommunicationChannel {
+public class RealCommunicationChannel implements CommunicationChannel {
 
   // private final ControlPanelLogic logic;
   private Socket socket;
