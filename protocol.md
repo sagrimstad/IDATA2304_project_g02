@@ -34,11 +34,10 @@ a change is registered.
 ## Information flow
 1. All sensors and actuator nodes connects to the main Server.
 2. Control panels connects the Server.
-3. Control panels connects to every actuator and sensor nodes in the network.
-4. Sensors register new data and sends this data to every connected control panel.
-5. Control panels receives the data and needs to understand the data and react.
-6. Control panels then sends (if needed) commands or instructions to the nodes to do a task.
-7. Then steps 4-6 will loop for as long as needed/wanted.
+3. Sensors register new data and sends this data to the server.
+4. Control panels receives the data from the server, and needs to understand the data and react.
+5. Control panels then sends (if needed) commands or instructions to the nodes to do a task.
+6. Then steps 3-5 will loop for as long as needed/wanted.
 
 Data send:
 - temperature
