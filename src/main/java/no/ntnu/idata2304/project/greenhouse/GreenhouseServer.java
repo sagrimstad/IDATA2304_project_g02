@@ -6,14 +6,14 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.ntnu.idata2304.project.message.Message;
 import no.ntnu.idata2304.project.tools.ClientHandler;
+import no.ntnu.idata2304.project.tools.Logger;
 
 /**
- * Handles the TCP server socket(s).
+ * Handles the TCP server socket/s.
  *
- * @author Group 2
- * @version v1.0 (2023.11.10)
+ * @author  Group 2
+ * @version v1.0 (2023.11.25)
  */
 public class GreenhouseServer {
 
@@ -29,12 +29,12 @@ public class GreenhouseServer {
   }
 
   /**
-   * Starts the server and accept the next client.
+   * Starts the server and accepts the next client.
    */
   public void startServer() {
     ServerSocket listeningSocket = openListeningSocket();
     if (listeningSocket != null) {
-      System.out.println("Server listening of port " + PORT_NUMBER);
+      Logger.info("Server listening on port " + PORT_NUMBER);
       isServerRunning = true;
       while (isServerRunning) {
         ClientHandler clientHandler = acceptNextClientConnection(listeningSocket);
@@ -49,40 +49,40 @@ public class GreenhouseServer {
   /**
    * Returns a listening socket after it has been opened or null on error.
    *
-   * @return A listening socket after it has been opened or null on error.
+   * @return A listening socket after it has been opened or null on error
    */
   private ServerSocket openListeningSocket() {
     ServerSocket listeningSocket = null;
     try {
       listeningSocket = new ServerSocket(PORT_NUMBER);
     } catch (IOException e) {
-      System.err.println("Could not open server socket: " + e.getMessage());
+      Logger.error("Could not open server socket (" + e.getMessage().toLowerCase() + ")");
     }
     return listeningSocket;
   }
 
   /**
-   * Returns the client handler for a client after the connection to the client has been accepted.
+   * Returns a client handler for a client after the connection to the client has been accepted.
    *
-   * @param listeningSocket A specified listening socket.
-   * @return The client handler for a client after the connection to the client has been accepted.
+   * @param listeningSocket A specified listening socket
+   * @return A client handler for a client after the connection to the client has been accepted
    */
   private ClientHandler acceptNextClientConnection(ServerSocket listeningSocket) {
     ClientHandler clientHandler = null;
     try {
       Socket clientSocket = listeningSocket.accept();
-      System.out.println("New client connected from " + clientSocket.getRemoteSocketAddress());
+      Logger.info("New client connected from " + clientSocket.getRemoteSocketAddress());
       clientHandler = new ClientHandler(this, clientSocket);
     } catch (IOException e) {
-      System.err.println("Could not accept client connection: " + e.getMessage());
+      Logger.error("Could not accept client connection (" + e.getMessage().toLowerCase() + ")");
     }
     return clientHandler;
   }
 
   /**
-   * Send a message to all currently connected clients.
+   * Sends a specified message to all currently connected clients.
    *
-   * @param message the message to send.
+   * @param message A specified message
    */
   public void sendResponseToAllClients(String message) {
     for (ClientHandler clientHandler : this.connectedClients) {
@@ -91,9 +91,9 @@ public class GreenhouseServer {
   }
 
   /**
-   * Removes the client handler for a client after the client has been disconnected.
+   * Removes a specifed client handler for a client after the client has been disconnected.
    *
-   * @param clientHandler the desired client to disconnect.
+   * @param clientHandler A specified client handler
    */
   public void clientDisconnected(ClientHandler clientHandler) {
     this.connectedClients.remove(clientHandler);
