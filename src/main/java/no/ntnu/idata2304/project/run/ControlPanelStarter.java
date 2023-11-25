@@ -56,17 +56,17 @@ public class ControlPanelStarter {
   }
 
   private CommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
-    RealCommunicationChannel spawner = new RealCommunicationChannel(logic);
-    logic.setCommunicationChannel(spawner);
-    if (spawner.open()) {
-      spawner.sendCommand("1;1_window");
+    RealCommunicationChannel channel = new RealCommunicationChannel(logic);
+    logic.setCommunicationChannel(channel);
+    if (channel.open()) {
+      channel.sendCommand("1;1_window");
     } else {
       Logger.error("Communcation channel could not be opened");
     }
     // TODO - here you initiate TCP/UDP socket communication
     // You communication class(es) may want to get reference to the logic and call necessary
     // logic methods when events happen (for example, when sensor data is received)
-    return spawner;
+    return channel;
   }
 
   private CommunicationChannel initiateFakeSpawner(ControlPanelLogic logic) {
