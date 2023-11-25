@@ -44,6 +44,7 @@ public class RealCommunicationChannel implements CommunicationChannel {
    */
   public void sendCommand(String command) {
     this.socketWriter.println(command);
+    Logger.info("Sending " + command);
   }
 
   // /**
@@ -188,12 +189,12 @@ public class RealCommunicationChannel implements CommunicationChannel {
   //   return new SensorReading(sensorType, value, unit);
   // }
 
-  // @Override
-  // public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
-  //   String state = isOn ? "ON" : "off";
-  //   Logger.info("Sending command to greenhouse: turn " + state + " actuator"
-  //       + "[" + actuatorId + "] on node " + nodeId);
-  // }
+  @Override
+  public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
+    String state = isOn ? "ON" : "off";
+    Logger.info("Sending command to greenhouse: turn " + state + " actuator"
+        + "[" + actuatorId + "] on node " + nodeId);
+  }
 
   @Override
   public boolean open() {
