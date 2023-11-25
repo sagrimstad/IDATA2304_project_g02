@@ -56,7 +56,7 @@ public class ControlPanelStarter {
   }
 
   private CommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
-    RealCommunicationChannel spawner = new RealCommunicationChannel();
+    RealCommunicationChannel spawner = new RealCommunicationChannel(logic);
     logic.setCommunicationChannel(spawner);
     if (spawner.open()) {
       spawner.sendCommand("1;1_window");
