@@ -1,9 +1,12 @@
 package no.ntnu.idata2304.project.greenhouse;
 
+import static no.ntnu.idata2304.project.greenhouse.GreenhouseServer.PORT_NUMBER;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import no.ntnu.idata2304.project.NodeCommunication;
 import no.ntnu.idata2304.project.listeners.greenhouse.NodeStateListener;
 import no.ntnu.idata2304.project.tools.Logger;
 
@@ -16,6 +19,7 @@ public class GreenhouseSimulator {
 
   private final List<PeriodicSwitch> periodicSwitches = new LinkedList<>();
   private final boolean fake;
+  private final NodeCommunication nodeCommunication;
   private GreenhouseServer server;
 
   /**
@@ -26,6 +30,7 @@ public class GreenhouseSimulator {
    */
   public GreenhouseSimulator(boolean fake) {
     this.fake = fake;
+    this.nodeCommunication = new NodeCommunication();
   }
 
   /**
@@ -71,6 +76,13 @@ public class GreenhouseSimulator {
     // TODO - here you can set up the TCP or UDP communication
     this.server = new GreenhouseServer();
     this.server.startServer();
+
+    boolean connected = nodeCommunication.connectToServer("localhost", PORT_NUMBER);
+    if (connected) {
+      System.out.println("Connected to server");
+    } else {
+      System.out.println("Connection failed");
+    }
   }
 
   private void initiateFakePeriodicSwitches() {

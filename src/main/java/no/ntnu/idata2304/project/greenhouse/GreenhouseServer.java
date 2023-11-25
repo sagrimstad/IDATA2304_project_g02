@@ -8,6 +8,7 @@ import java.util.List;
 
 import no.ntnu.idata2304.project.tools.ClientHandler;
 import no.ntnu.idata2304.project.tools.Logger;
+import no.ntnu.idata2304.project.tools.NodeClientHandler;
 
 /**
  * Handles the TCP server socket/s.
@@ -20,7 +21,7 @@ public class GreenhouseServer {
   public static final int PORT_NUMBER = 1337;
   boolean isServerRunning;
   private final List<ClientHandler> connectedClients = new ArrayList<>();
-
+  private final List<NodeClientHandler> connectedNodeClients = new ArrayList<>();
   private ServerSocket listeningSocket;
 
   /**
@@ -40,9 +41,12 @@ public class GreenhouseServer {
       this.isServerRunning = true;
       while (this.isServerRunning) {
         ClientHandler clientHandler = acceptNextClientConnection(this.listeningSocket);
-        if (clientHandler != null) {
+        NodeClientHandler nodeClientHandler = acceptNextNodeClientConnection(this.listeningSocket);
+        if (clientHandler != null || nodeClientHandler != null) {
           this.connectedClients.add(clientHandler);
           clientHandler.start();
+          this.connectedNodeClients.add(nodeClientHandler);
+          nodeClientHandler.start();
         }
       }
     }
@@ -79,6 +83,24 @@ public class GreenhouseServer {
       Logger.error("Could not accept client connection (" + e.getMessage().toLowerCase() + ")");
     }
     return clientHandler;
+  }
+
+  /**
+   * Returns a client handler for a client after the connection to the client has been accepted.
+   *
+   * @param listeningSocket A specified listening socket
+   * @return A client handler for a client after the connection to the client has been accepted
+   */
+  private NodeClientHandler acceptNextNodeClientConnection(ServerSocket listeningSocket) {
+    NodeClientHandler nodeClientHandler = null;
+    try {
+      Socket clientSocket = listeningSocket.accept();
+      Logger.info("New client connected from " + clientSocket.getRemoteSocketAddress());
+      nodeClientHandler = new NodeClientHandler(this, clientSocket);
+    } catch (IOException e) {
+      Logger.error("Could not accept client connection (" + e.getMessage().toLowerCase() + ")");
+    }
+    return nodeClientHandler;
   }
 
   /**
