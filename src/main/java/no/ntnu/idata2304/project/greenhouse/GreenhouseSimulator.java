@@ -16,6 +16,7 @@ public class GreenhouseSimulator {
 
   private final List<PeriodicSwitch> periodicSwitches = new LinkedList<>();
   private final boolean fake;
+  private GreenhouseServer server;
 
   /**
    * Create a greenhouse simulator.
@@ -68,8 +69,8 @@ public class GreenhouseSimulator {
 
   private void initiateRealCommunication() {
     // TODO - here you can set up the TCP or UDP communication
-    GreenhouseServer server = new GreenhouseServer();
-    server.startServer();
+    this.server = new GreenhouseServer();
+    this.server.startServer();
   }
 
   private void initiateFakePeriodicSwitches() {
@@ -93,7 +94,7 @@ public class GreenhouseSimulator {
         periodicSwitch.stop();
       }
     } else {
-      // TODO - here you stop the TCP/UDP communication
+      this.server.stopServer();
     }
   }
 

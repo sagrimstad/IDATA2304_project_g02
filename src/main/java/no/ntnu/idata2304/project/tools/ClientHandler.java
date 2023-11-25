@@ -121,4 +121,20 @@ public class ClientHandler extends Thread {
   public void sendToClient(String message) {
     this.socketWriter.println(message);
   }
+
+  public void close() {
+    try {
+      if (this.socketWriter != null) {
+        this.socketWriter.close();
+      }
+      if (this.socketReader != null) {
+        this.socketReader.close();
+      }
+      if (this.socket != null) {
+        this.socket.close();
+      }
+    } catch (IOException e) {
+      System.err.println("Error while closing sockets: " + e.getMessage());
+    }
+  }
 }

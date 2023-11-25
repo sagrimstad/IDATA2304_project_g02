@@ -21,6 +21,8 @@ public class GreenhouseServer {
   boolean isServerRunning;
   private final List<ClientHandler> connectedClients = new ArrayList<>();
 
+  private ServerSocket listeningSocket;
+
   /**
    * Constructs an instance of the GreenhouseServer class.
    */
@@ -32,14 +34,14 @@ public class GreenhouseServer {
    * Starts the server and accepts the next client.
    */
   public void startServer() {
-    ServerSocket listeningSocket = openListeningSocket();
-    if (listeningSocket != null) {
+    this.listeningSocket = openListeningSocket();
+    if (this.listeningSocket != null) {
       Logger.info("Server listening on port " + PORT_NUMBER);
-      isServerRunning = true;
-      while (isServerRunning) {
-        ClientHandler clientHandler = acceptNextClientConnection(listeningSocket);
+      this.isServerRunning = true;
+      while (this.isServerRunning) {
+        ClientHandler clientHandler = acceptNextClientConnection(this.listeningSocket);
         if (clientHandler != null) {
-          connectedClients.add(clientHandler);
+          this.connectedClients.add(clientHandler);
           clientHandler.start();
         }
       }
@@ -97,5 +99,23 @@ public class GreenhouseServer {
    */
   public void clientDisconnected(ClientHandler clientHandler) {
     this.connectedClients.remove(clientHandler);
+  }
+
+  /**
+   * Stos the server and disconnects every connected client and closes the server socket.
+   */
+  public void stopServer() {
+    this.isServerRunning = false;
+    try {
+      for (ClientHandler clientHandler : this.connectedClients) {
+        clientHandler.close();
+      }
+      this.connectedClients.clear();
+      if (this.listeningSocket != null && !this.listeningSocket.isClosed()) {
+        this.listeningSocket.close();
+      }
+    } catch (IOException e) {
+      System.err.println("Error while stopping the server: " + e.getMessage());
+    }
   }
 }
