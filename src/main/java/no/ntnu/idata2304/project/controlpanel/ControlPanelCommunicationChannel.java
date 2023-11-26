@@ -1,22 +1,14 @@
 package no.ntnu.idata2304.project.controlpanel;
 
 import static no.ntnu.idata2304.project.GreenhouseServer.PORT_NUMBER;
-import static no.ntnu.idata2304.project.tools.Parser.parseDoubleOrError;
-import static no.ntnu.idata2304.project.tools.Parser.parseIntegerOrError;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import no.ntnu.idata2304.project.CommunicationChannel;
-import no.ntnu.idata2304.project.greenhouse.Actuator;
-import no.ntnu.idata2304.project.greenhouse.SensorReading;
 import no.ntnu.idata2304.project.tools.Logger;
 
 /**
@@ -209,4 +201,22 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
     }
     return success;
   }
+  @Override
+  public void close() {
+    try {
+      if (socketWriter != null) {
+        socketWriter.close();
+      }
+      if (socketReader != null) {
+        socketReader.close();
+      }
+      if (socket != null && !socket.isClosed()) {
+        socket.close();
+        Logger.info("Communication channel closed");
+      }
+    } catch (IOException e) {
+      Logger.error("Error closing communication channel: " + e.getMessage());
+    }
+  }
+
 }

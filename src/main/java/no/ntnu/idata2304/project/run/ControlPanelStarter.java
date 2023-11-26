@@ -97,6 +97,16 @@ public class ControlPanelStarter {
   }
 
   private void stopCommunication() {
-    // TODO - here you stop the TCP/UDP socket communication
+
+    if (fake) {
+      // For fake communication, no need to explicitly close anything
+      return;
+    }
+
+    ControlPanelCommunicationChannel spawner = (ControlPanelCommunicationChannel) channel;
+    if (spawner != null) {
+      spawner.close();
+    }
   }
+    // TODO - here you stop the TCP/UDP socket communication
 }
