@@ -1,7 +1,8 @@
 package no.ntnu.idata2304.project.listeners.greenhouse;
 
 import java.util.List;
-import no.ntnu.idata2304.project.greenhouse.Sensor;
+
+import no.ntnu.idata2304.project.node.Sensor;
 
 /**
  * Listener for sensor update events. This will (probably) be usable only on the sensor/actuator

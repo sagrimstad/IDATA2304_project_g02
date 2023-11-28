@@ -4,11 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import no.ntnu.idata2304.project.CommunicationChannel;
-import no.ntnu.idata2304.project.greenhouse.Actuator;
-import no.ntnu.idata2304.project.greenhouse.SensorReading;
 import no.ntnu.idata2304.project.listeners.common.ActuatorListener;
 import no.ntnu.idata2304.project.listeners.common.CommunicationChannelListener;
 import no.ntnu.idata2304.project.listeners.controlpanel.GreenhouseEventListener;
+import no.ntnu.idata2304.project.node.Actuator;
+import no.ntnu.idata2304.project.node.SensorReading;
 import no.ntnu.idata2304.project.tools.Logger;
 
 /**

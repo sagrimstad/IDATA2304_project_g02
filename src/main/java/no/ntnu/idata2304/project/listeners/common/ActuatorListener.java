@@ -1,6 +1,6 @@
 package no.ntnu.idata2304.project.listeners.common;
 
-import no.ntnu.idata2304.project.greenhouse.Actuator;
+import no.ntnu.idata2304.project.node.Actuator;
 
 /**
  * Listener for actuator state changes. This could be used both on the sensor/actuator (greenhouse)

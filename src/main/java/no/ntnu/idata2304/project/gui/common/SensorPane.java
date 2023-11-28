@@ -8,8 +8,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.VBox;
-import no.ntnu.idata2304.project.greenhouse.Sensor;
-import no.ntnu.idata2304.project.greenhouse.SensorReading;
+import no.ntnu.idata2304.project.node.Sensor;
+import no.ntnu.idata2304.project.node.SensorReading;
 import no.ntnu.idata2304.project.tools.Logger;
 
 /**

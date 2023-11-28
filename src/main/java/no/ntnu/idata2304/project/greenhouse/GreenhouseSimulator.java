@@ -6,8 +6,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import no.ntnu.idata2304.project.NodeCommunicationChannel;
+
 import no.ntnu.idata2304.project.listeners.greenhouse.NodeStateListener;
+import no.ntnu.idata2304.project.node.DeviceFactory;
+import no.ntnu.idata2304.project.node.NodeCommunicationChannel;
+import no.ntnu.idata2304.project.node.PeriodicSwitch;
+import no.ntnu.idata2304.project.node.SensorActuatorNode;
 import no.ntnu.idata2304.project.tools.Logger;
 
 /**

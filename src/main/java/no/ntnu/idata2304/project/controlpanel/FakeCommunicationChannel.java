@@ -9,8 +9,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import no.ntnu.idata2304.project.CommunicationChannel;
-import no.ntnu.idata2304.project.greenhouse.Actuator;
-import no.ntnu.idata2304.project.greenhouse.SensorReading;
+import no.ntnu.idata2304.project.node.Actuator;
+import no.ntnu.idata2304.project.node.SensorReading;
 import no.ntnu.idata2304.project.tools.Logger;
 
 /**

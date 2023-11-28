@@ -5,13 +5,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import no.ntnu.idata2304.project.greenhouse.Actuator;
-import no.ntnu.idata2304.project.greenhouse.Sensor;
-import no.ntnu.idata2304.project.greenhouse.SensorActuatorNode;
 import no.ntnu.idata2304.project.gui.common.ActuatorPane;
 import no.ntnu.idata2304.project.gui.common.SensorPane;
 import no.ntnu.idata2304.project.listeners.common.ActuatorListener;
 import no.ntnu.idata2304.project.listeners.greenhouse.SensorListener;
+import no.ntnu.idata2304.project.node.Actuator;
+import no.ntnu.idata2304.project.node.Sensor;
+import no.ntnu.idata2304.project.node.SensorActuatorNode;
 
 /**
  * Window with GUI for overview and control of one specific sensor/actuator node.

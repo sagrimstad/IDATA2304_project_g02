@@ -1,4 +1,4 @@
-package no.ntnu.idata2304.project.greenhouse;
+package no.ntnu.idata2304.project.node;
 
 /**
  * A sensor which can sense the environment in a specific way.

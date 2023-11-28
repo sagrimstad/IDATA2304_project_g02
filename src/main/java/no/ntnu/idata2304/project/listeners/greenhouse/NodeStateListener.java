@@ -1,6 +1,6 @@
 package no.ntnu.idata2304.project.listeners.greenhouse;
 
-import no.ntnu.idata2304.project.greenhouse.SensorActuatorNode;
+import no.ntnu.idata2304.project.node.SensorActuatorNode;
 
 /**
  * Listener which receives node lifecycle events. This should be used on the sensor/actuator node

@@ -1,7 +1,7 @@
 package no.ntnu.idata2304.project.controlpanel;
 
-import no.ntnu.idata2304.project.greenhouse.Actuator;
-import no.ntnu.idata2304.project.greenhouse.ActuatorCollection;
+import no.ntnu.idata2304.project.node.Actuator;
+import no.ntnu.idata2304.project.node.ActuatorCollection;
 
 /**
  * Contains information about one sensor/actuator node. This is NOT the node itself, rather an

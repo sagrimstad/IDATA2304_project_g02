@@ -1,7 +1,8 @@
-package no.ntnu.idata2304.project.greenhouse;
+package no.ntnu.idata2304.project.node;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import no.ntnu.idata2304.project.listeners.common.ActuatorListener;
 
 /**

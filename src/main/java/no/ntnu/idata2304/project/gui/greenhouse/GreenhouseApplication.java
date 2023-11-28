@@ -6,8 +6,8 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import no.ntnu.idata2304.project.greenhouse.GreenhouseSimulator;
-import no.ntnu.idata2304.project.greenhouse.SensorActuatorNode;
 import no.ntnu.idata2304.project.listeners.greenhouse.NodeStateListener;
+import no.ntnu.idata2304.project.node.SensorActuatorNode;
 import no.ntnu.idata2304.project.tools.Logger;
 
 /**

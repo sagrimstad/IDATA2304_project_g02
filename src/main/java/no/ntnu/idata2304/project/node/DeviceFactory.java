@@ -1,4 +1,4 @@
-package no.ntnu.idata2304.project.greenhouse;
+package no.ntnu.idata2304.project.node;
 
 /**
  * A factory for producing sensors and actuators of specific types.
