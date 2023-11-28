@@ -49,6 +49,7 @@ public class ContralPanelClientHandler extends Thread {
       String clientRequest = this.readClientRequest();
       if (clientRequest != null) {
         Logger.info("Received " + clientRequest);
+        // TODO Handle client request by parsing all commands
         response = "OK";
         this.sendToClient(response);
       } else {

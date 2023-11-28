@@ -42,11 +42,11 @@ public class GreenhouseServer {
       Logger.info("Server listening on port " + PORT_NUMBER);
       this.isServerRunning = true;
       while (this.isServerRunning) {
-        ContralPanelClientHandler clientHandler = acceptNextClientConnection(this.listeningSocket);
+        ContralPanelClientHandler controlPanelClientHandler = acceptNextClientConnection(this.listeningSocket);
         NodeClientHandler nodeClientHandler = acceptNextNodeClientConnection(this.listeningSocket);
-        if (clientHandler != null || nodeClientHandler != null) {
-          this.connectedClients.add(clientHandler);
-          clientHandler.start();
+        if (controlPanelClientHandler != null || nodeClientHandler != null) {
+          this.connectedClients.add(controlPanelClientHandler);
+          controlPanelClientHandler.start();
           nodeClientHandler.start();
         }
       }
