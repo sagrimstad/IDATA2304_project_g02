@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import no.ntnu.idata2304.project.tools.ClientHandler;
 import no.ntnu.idata2304.project.tools.Logger;
@@ -21,7 +23,7 @@ public class GreenhouseServer {
   public static final int PORT_NUMBER = 1337;
   boolean isServerRunning;
   private final List<ClientHandler> connectedClients = new ArrayList<>();
-  private final List<NodeClientHandler> connectedNodeClients = new ArrayList<>();
+  private Map<Integer, Socket> nodeClients = new HashMap<>();
   private ServerSocket listeningSocket;
 
   /**
@@ -45,7 +47,6 @@ public class GreenhouseServer {
         if (clientHandler != null || nodeClientHandler != null) {
           this.connectedClients.add(clientHandler);
           clientHandler.start();
-          this.connectedNodeClients.add(nodeClientHandler);
           nodeClientHandler.start();
         }
       }
@@ -102,6 +103,8 @@ public class GreenhouseServer {
     }
     return nodeClientHandler;
   }
+
+
 
   /**
    * Sends a specified message to all currently connected clients.
