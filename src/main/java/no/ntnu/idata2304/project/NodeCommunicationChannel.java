@@ -6,22 +6,22 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class NodeCommunication {
-  private Socket socket;
+public class NodeCommunicationChannel {
+  private Socket clientSocket;
   private PrintWriter outputWriter;
   private BufferedReader inputReader;
 
-  public NodeCommunication() {
+  public NodeCommunicationChannel() {
     // Intentionally left blank
   }
 
   public boolean connectToServer(String serverAddress, int serverPort) {
     boolean success = false;
     try {
-      this.socket = new Socket(serverAddress, serverPort);
-      this.outputWriter = new PrintWriter(this.socket.getOutputStream(), true);
+      this.clientSocket = new Socket(serverAddress, serverPort);
+      this.outputWriter = new PrintWriter(this.clientSocket.getOutputStream(), true);
       this.inputReader = new BufferedReader(
-          new InputStreamReader(this.socket.getInputStream()));
+          new InputStreamReader(this.clientSocket.getInputStream()));
       success = true;
     } catch (IOException e) {
       System.err.println("Could not connect to server: " + e.getMessage());
@@ -58,8 +58,8 @@ public class NodeCommunication {
       if (inputReader != null) {
         inputReader.close();
       }
-      if (socket != null && !socket.isClosed()) {
-        socket.close();
+      if (clientSocket != null && !clientSocket.isClosed()) {
+        clientSocket.close();
       }
     } catch (IOException e) {
       System.err.println("Error while closing connection to server: " + e.getMessage());

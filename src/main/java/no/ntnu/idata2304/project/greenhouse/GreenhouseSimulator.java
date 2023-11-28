@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import no.ntnu.idata2304.project.NodeCommunication;
+import no.ntnu.idata2304.project.NodeCommunicationChannel;
 import no.ntnu.idata2304.project.listeners.greenhouse.NodeStateListener;
 import no.ntnu.idata2304.project.tools.Logger;
 
@@ -19,7 +19,7 @@ public class GreenhouseSimulator {
 
   private final List<PeriodicSwitch> periodicSwitches = new LinkedList<>();
   private final boolean fake;
-  private final NodeCommunication nodeCommunication;
+  private final NodeCommunicationChannel nodeCommunicationChannel;
   private GreenhouseServer server;
 
   /**
@@ -30,7 +30,7 @@ public class GreenhouseSimulator {
    */
   public GreenhouseSimulator(boolean fake) {
     this.fake = fake;
-    this.nodeCommunication = new NodeCommunication();
+    this.nodeCommunicationChannel = new NodeCommunicationChannel();
   }
 
   /**
@@ -77,7 +77,8 @@ public class GreenhouseSimulator {
     this.server = new GreenhouseServer();
     this.server.startServer();
 
-    boolean connected = nodeCommunication.connectToServer("localhost", PORT_NUMBER);
+    boolean connected = nodeCommunicationChannel.connectToServer(
+        "localhost", PORT_NUMBER);
     if (connected) {
       System.out.println("Connected to server");
     } else {
