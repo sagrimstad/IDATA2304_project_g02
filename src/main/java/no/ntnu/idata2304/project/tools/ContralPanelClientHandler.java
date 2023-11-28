@@ -18,7 +18,7 @@ import no.ntnu.idata2304.project.message.StateMessage;
  * @author Group 2
  * @version v1.0 (2023.11.10)
  */
-public class ClientHandler extends Thread {
+public class ContralPanelClientHandler extends Thread {
 
   private final GreenhouseServer server;
   private final Socket socket;
@@ -32,7 +32,7 @@ public class ClientHandler extends Thread {
    * @param server References to the main Server class
    * @throws IOException When something goes wrong with establishing the input or output streams.
    */
-  public ClientHandler(GreenhouseServer server, Socket socket) throws IOException {
+  public ContralPanelClientHandler(GreenhouseServer server, Socket socket) throws IOException {
     this.server = server;
     this.socket = socket;
     this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
