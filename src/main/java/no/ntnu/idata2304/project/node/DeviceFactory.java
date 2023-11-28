@@ -62,7 +62,7 @@ public class DeviceFactory {
       throw new IllegalArgumentException("Can't add a negative number of actuators");
     }
 
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; i++) {
       Actuator actuator = template.createClone();
       node.addActuator(actuator);
     }

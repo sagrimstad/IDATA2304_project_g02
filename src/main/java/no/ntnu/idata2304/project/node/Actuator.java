@@ -11,7 +11,7 @@ import no.ntnu.idata2304.project.listeners.common.ActuatorListener;
  */
 public class Actuator {
 
-  private static int nextId = 1;
+  private static int nextId = 0;
   private final String type;
   private final int nodeId;
   private final int id;
