@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import no.ntnu.idata2304.project.tools.ContralPanelClientHandler;
+import no.ntnu.idata2304.project.tools.ControlPanelClientHandler;
 import no.ntnu.idata2304.project.tools.Logger;
 import no.ntnu.idata2304.project.tools.NodeClientHandler;
 
@@ -22,7 +22,7 @@ public class GreenhouseServer {
 
   public static final int PORT_NUMBER = 1337;
   boolean isServerRunning;
-  private final List<ContralPanelClientHandler> connectedClients = new ArrayList<>();
+  private final List<ControlPanelClientHandler> connectedClients = new ArrayList<>();
   private Map<Integer, Socket> nodeClients = new HashMap<>();
   private ServerSocket listeningSocket;
 
@@ -42,7 +42,7 @@ public class GreenhouseServer {
       Logger.info("Server listening on port " + PORT_NUMBER);
       this.isServerRunning = true;
       while (this.isServerRunning) {
-        ContralPanelClientHandler controlPanelClientHandler = acceptNextClientConnection(this.listeningSocket);
+        ControlPanelClientHandler controlPanelClientHandler = acceptNextClientConnection(this.listeningSocket);
         NodeClientHandler nodeClientHandler = acceptNextNodeClientConnection(this.listeningSocket);
         if (controlPanelClientHandler != null || nodeClientHandler != null) {
           this.connectedClients.add(controlPanelClientHandler);
@@ -74,12 +74,12 @@ public class GreenhouseServer {
    * @param listeningSocket A specified listening socket
    * @return A client handler for a client after the connection to the client has been accepted
    */
-  private ContralPanelClientHandler acceptNextClientConnection(ServerSocket listeningSocket) {
-    ContralPanelClientHandler clientHandler = null;
+  private ControlPanelClientHandler acceptNextClientConnection(ServerSocket listeningSocket) {
+    ControlPanelClientHandler clientHandler = null;
     try {
       Socket clientSocket = listeningSocket.accept();
       Logger.info("New client connected from " + clientSocket.getRemoteSocketAddress());
-      clientHandler = new ContralPanelClientHandler(this, clientSocket);
+      clientHandler = new ControlPanelClientHandler(this, clientSocket);
     } catch (IOException e) {
       Logger.error("Could not accept client connection (" + e.getMessage().toLowerCase() + ")");
     }
@@ -112,7 +112,7 @@ public class GreenhouseServer {
    * @param message A specified message
    */
   public void sendResponseToAllClients(String message) {
-    for (ContralPanelClientHandler clientHandler : this.connectedClients) {
+    for (ControlPanelClientHandler clientHandler : this.connectedClients) {
       clientHandler.sendToClient(message);
     }
   }
@@ -122,7 +122,7 @@ public class GreenhouseServer {
    *
    * @param clientHandler A specified client handler
    */
-  public void clientDisconnected(ContralPanelClientHandler clientHandler) {
+  public void clientDisconnected(ControlPanelClientHandler clientHandler) {
     this.connectedClients.remove(clientHandler);
   }
 
@@ -132,7 +132,7 @@ public class GreenhouseServer {
   public void stopServer() {
     this.isServerRunning = false;
     try {
-      for (ContralPanelClientHandler clientHandler : this.connectedClients) {
+      for (ControlPanelClientHandler clientHandler : this.connectedClients) {
         clientHandler.close();
       }
       this.connectedClients.clear();
