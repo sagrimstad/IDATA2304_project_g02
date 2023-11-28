@@ -3,7 +3,7 @@ package no.ntnu.idata2304.project.run;
 import no.ntnu.idata2304.project.CommunicationChannel;
 import no.ntnu.idata2304.project.controlpanel.ControlPanelLogic;
 import no.ntnu.idata2304.project.controlpanel.FakeCommunicationChannel;
-import no.ntnu.idata2304.project.controlpanel.RealCommunicationChannel;
+import no.ntnu.idata2304.project.controlpanel.ControlPanelCommunicationChannel;
 import no.ntnu.idata2304.project.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.idata2304.project.tools.Logger;
 
@@ -56,7 +56,7 @@ public class ControlPanelStarter {
   }
 
   private CommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
-    RealCommunicationChannel spawner = new RealCommunicationChannel();
+    ControlPanelCommunicationChannel spawner = new ControlPanelCommunicationChannel();
     logic.setCommunicationChannel(spawner);
     if (spawner.open()) {
       spawner.sendCommand("1;1_window");
