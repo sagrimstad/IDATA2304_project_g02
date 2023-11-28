@@ -3,6 +3,7 @@ package no.ntnu.idata2304.project.controlpanel;
 import java.util.LinkedList;
 import java.util.List;
 
+import no.ntnu.idata2304.project.CommunicationChannel;
 import no.ntnu.idata2304.project.greenhouse.Actuator;
 import no.ntnu.idata2304.project.greenhouse.SensorReading;
 import no.ntnu.idata2304.project.listeners.common.ActuatorListener;
