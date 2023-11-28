@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import no.ntnu.idata2304.project.controlpanel.CommunicationChannel;
+
+import no.ntnu.idata2304.project.CommunicationChannel;
 import no.ntnu.idata2304.project.tools.Logger;
 
 /**
