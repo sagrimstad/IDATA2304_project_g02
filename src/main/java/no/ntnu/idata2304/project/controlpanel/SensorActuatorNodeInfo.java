@@ -1,4 +1,4 @@
-package no.ntnu.idata2304.project.tools;
+package no.ntnu.idata2304.project.controlpanel;
 
 import no.ntnu.idata2304.project.greenhouse.Actuator;
 import no.ntnu.idata2304.project.greenhouse.ActuatorCollection;

@@ -9,7 +9,6 @@ import no.ntnu.idata2304.project.listeners.common.ActuatorListener;
 import no.ntnu.idata2304.project.listeners.common.CommunicationChannelListener;
 import no.ntnu.idata2304.project.listeners.controlpanel.GreenhouseEventListener;
 import no.ntnu.idata2304.project.tools.Logger;
-import no.ntnu.idata2304.project.tools.SensorActuatorNodeInfo;
 
 /**
  * The central logic of a control panel node. It uses a communication channel to send commands and

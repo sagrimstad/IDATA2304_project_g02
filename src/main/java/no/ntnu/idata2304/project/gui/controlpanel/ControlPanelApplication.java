@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import no.ntnu.idata2304.project.controlpanel.CommunicationChannel;
 import no.ntnu.idata2304.project.controlpanel.ControlPanelLogic;
+import no.ntnu.idata2304.project.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.idata2304.project.greenhouse.Actuator;
 import no.ntnu.idata2304.project.greenhouse.SensorReading;
 import no.ntnu.idata2304.project.gui.common.ActuatorPane;
@@ -21,7 +22,6 @@ import no.ntnu.idata2304.project.gui.common.SensorPane;
 import no.ntnu.idata2304.project.listeners.common.CommunicationChannelListener;
 import no.ntnu.idata2304.project.listeners.controlpanel.GreenhouseEventListener;
 import no.ntnu.idata2304.project.tools.Logger;
-import no.ntnu.idata2304.project.tools.SensorActuatorNodeInfo;
 
 /**
  * Run a control panel with a graphical user interface (GUI), with JavaFX.

@@ -17,7 +17,6 @@ import java.util.TimerTask;
 import no.ntnu.idata2304.project.greenhouse.Actuator;
 import no.ntnu.idata2304.project.greenhouse.SensorReading;
 import no.ntnu.idata2304.project.tools.Logger;
-import no.ntnu.idata2304.project.tools.SensorActuatorNodeInfo;
 
 /**
  * Represents a real communication channel.
