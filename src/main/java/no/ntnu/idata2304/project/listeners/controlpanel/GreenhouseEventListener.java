@@ -1,8 +1,9 @@
 package no.ntnu.idata2304.project.listeners.controlpanel;
 
 import java.util.List;
-import no.ntnu.idata2304.project.controlpanel.SensorActuatorNodeInfo;
+
 import no.ntnu.idata2304.project.greenhouse.SensorReading;
+import no.ntnu.idata2304.project.tools.SensorActuatorNodeInfo;
 
 /**
  * Listener of events happening "inside a greenhouse", such as a node appearing, disappearing, new
