@@ -38,16 +38,6 @@ public class RealCommunicationChannel implements CommunicationChannel {
   }
 
   /**
-   * Sends a specified command over the communication channel.
-   * 
-   * @param command A specified command
-   */
-  public void sendCommand(String command) {
-    this.socketWriter.println(command);
-    Logger.info("Sending " + command);
-  }
-
-  /**
    * Starts the communcation channel by receiving commands from the server, telling the control panel
    * what nodes to spawn.
    */
@@ -72,7 +62,7 @@ public class RealCommunicationChannel implements CommunicationChannel {
    *                      [nodeId] semicolon [actuator_count_1] underscore [actuator_type_1] space
    *                      ... space [actuator_count_M] underscore [actuator_type_M]
    */
-  public void spawnNode(String specification) {
+  private void spawnNode(String specification) {
     SensorActuatorNodeInfo nodeInfo = this.createSensorNodeInfoFrom(specification);
     Timer timer = new Timer();
     timer.schedule(new TimerTask() {
@@ -81,17 +71,6 @@ public class RealCommunicationChannel implements CommunicationChannel {
         logic.onNodeAdded(nodeInfo);
       }
     }, this.delay * 1000L);
-  }
-
-  /**
-   * Sends a sensor reading over the communication channel
-   *
-   * @param sensorReading A specified sensor reading
-   */
-  public void sendSensorReading(String sensorReading) {
-    this.socketWriter.println(sensorReading);
-    Logger.info("Sending " + sensorReading);
-    //TODO: Actually send the message over the socket!
   }
 
   private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {
@@ -108,6 +87,21 @@ public class RealCommunicationChannel implements CommunicationChannel {
       NodeParser.parseActuators(parts[1], info, logic);
     }
     return info;
+  }
+
+  /**
+   * Advertise that a node is removed.
+   *
+   * @param nodeId ID of the removed node
+   */
+  public void advertiseRemovedNode(int nodeId) {
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        logic.onNodeRemoved(nodeId);
+      }
+    }, this.delay * 1000L);
   }
 
   /**
@@ -137,21 +131,6 @@ public class RealCommunicationChannel implements CommunicationChannel {
   }
 
   /**
-   * Advertise that a node is removed.
-   *
-   * @param nodeId ID of the removed node
-   */
-  public void advertiseRemovedNode(int nodeId) {
-    Timer timer = new Timer();
-    timer.schedule(new TimerTask() {
-      @Override
-      public void run() {
-        logic.onNodeRemoved(nodeId);
-      }
-    }, this.delay * 1000L);
-  }
-
-  /**
    * Advertise that an actuator has changed it's state.
    *
    * @param nodeId     ID of the node to which the actuator is attached
@@ -166,6 +145,27 @@ public class RealCommunicationChannel implements CommunicationChannel {
         logic.onActuatorStateChanged(nodeId, actuatorId, on);
       }
     }, this.delay * 1000L);
+  }
+
+  /**
+   * Sends a specified command over the communication channel.
+   * 
+   * @param command A specified command
+   */
+  public void sendCommand(String command) {
+    this.socketWriter.println(command);
+    Logger.info("Sending " + command);
+  }
+
+  /**
+   * Sends a sensor reading over the communication channel
+   *
+   * @param sensorReading A specified sensor reading
+   */
+  public void sendSensorReading(String sensorReading) {
+    this.socketWriter.println(sensorReading);
+    Logger.info("Sending " + sensorReading);
+    //TODO: Actually send the message over the socket!
   }
 
   @Override
