@@ -44,19 +44,29 @@ public class ClientHandler extends Thread {
    */
   @Override
   public void run() {
-    String response;
+    String receivedMessage;
     do {
-      String clientRequest = this.readClientRequest();
-      if (clientRequest != null) {
-        Logger.info("Received " + clientRequest);
-        response = "OK";
-        this.sendToClient(response);
-      } else {
-        response = null;
+      receivedMessage = readClientRequest();
+      if (receivedMessage != null) {
+        if (isSensorReading(receivedMessage)) {
+          handleReceivedMessage(receivedMessage);
+        } else {
+          String response;
+          do {
+            String clientRequest = this.readClientRequest();
+            if (clientRequest != null) {
+              Logger.info("Received " + clientRequest);
+              response = "OK";
+              this.sendToClient(response);
+            } else {
+              response = null;
+            }
+          } while (response != null);
+          Logger.info("Client " + this.socket.getRemoteSocketAddress() + " leaving");
+          this.server.clientDisconnected(this);
+        }
       }
-    } while (response != null);
-    Logger.info("Client " + this.socket.getRemoteSocketAddress() + " leaving");
-    this.server.clientDisconnected(this);
+    } while (receivedMessage != null);
     // Message response;
     // do {
     //   Command clientCommand = readClientRequest();
@@ -76,6 +86,10 @@ public class ClientHandler extends Thread {
     // } while (response != null);
     // System.out.println("Client " + this.socket.getRemoteSocketAddress() + " leaving");
     // this.server.clientDisconnected(this);
+  }
+
+  private boolean isSensorReading(String message) {
+    return message.contains(":");
   }
 
   private boolean isBroadcastMessage(Message response) {
@@ -111,6 +125,28 @@ public class ClientHandler extends Thread {
     //   System.err.println("Could not recieve client request: " + e.getMessage());
     // }
     // return (Command) clientCommand;
+  }
+
+  /**
+   * Handles a message received from the server.
+   *
+   * @param message the message to handle.
+   */
+  public void handleReceivedMessage(String message) {
+    //TODO: implement logic to parse sensor reading. perhaps move to a different class
+    String[] parts = message.split(":");
+    if (parts.length == 4) {
+      int sensorId = Integer.parseInt(parts[1]);
+      String type = parts[1];
+      double value = Double.parseDouble(parts[2]);
+      String unit = parts[3];
+
+      System.out.println("Received sensor reading: " + "Sensor ID: " + sensorId
+          + "Type: " + type + "Value: " + value + "Unit: " + unit);
+    } else {
+      // Handle incorrect message format or unexpected data
+      System.out.println("Received invalid sensor reading message: " + message);
+    }
   }
 
   /**
