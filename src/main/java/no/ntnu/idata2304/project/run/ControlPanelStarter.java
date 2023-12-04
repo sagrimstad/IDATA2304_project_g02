@@ -59,7 +59,7 @@ public class ControlPanelStarter {
     RealCommunicationChannel channel = new RealCommunicationChannel(logic);
     logic.setCommunicationChannel(channel);
     if (channel.open()) {
-      channel.sendCommand("1;1_window");
+      channel.start();
     } else {
       Logger.error("Communcation channel could not be opened");
     }

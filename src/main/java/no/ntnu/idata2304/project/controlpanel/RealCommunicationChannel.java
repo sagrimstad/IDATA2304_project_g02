@@ -1,7 +1,6 @@
 package no.ntnu.idata2304.project.controlpanel;
 
 import static no.ntnu.idata2304.project.greenhouse.GreenhouseServer.PORT_NUMBER;
-import static no.ntnu.idata2304.project.tools.Parser.parseDoubleOrError;
 import static no.ntnu.idata2304.project.tools.Parser.parseIntegerOrError;
 
 import java.io.BufferedReader;
@@ -9,14 +8,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import no.ntnu.idata2304.project.greenhouse.Actuator;
 import no.ntnu.idata2304.project.greenhouse.SensorReading;
 import no.ntnu.idata2304.project.tools.Logger;
+import no.ntnu.idata2304.project.tools.NodeParser;
 
 /**
  * Represents a real communication channel.
@@ -47,8 +45,42 @@ public class RealCommunicationChannel implements CommunicationChannel {
   public void sendCommand(String command) {
     this.socketWriter.println(command);
     Logger.info("Sending " + command);
-    this.spawnNode(command);
-    this.delay++;
+  }
+
+  /**
+   * Starts the communcation channel by receiving commands from the server, telling the control panel
+   * what nodes to spawn.
+   */
+  public void start() {
+    try {
+      String serverCommand;
+      do {
+        serverCommand = this.socketReader.readLine();
+        if (!serverCommand.equals("0")) {
+          this.spawnNode(serverCommand);
+        }
+      } while (!serverCommand.equals("0"));
+    } catch (IOException e) {
+      Logger.error("Could not receive command from server");
+    }
+  }
+
+  /**
+   * Spawn a new sensor/actuator node information after a given delay.
+   *
+   * @param specification A (temporary) manual configuration of the node in the following format
+   *                      [nodeId] semicolon [actuator_count_1] underscore [actuator_type_1] space
+   *                      ... space [actuator_count_M] underscore [actuator_type_M]
+   */
+  public void spawnNode(String specification) {
+    SensorActuatorNodeInfo nodeInfo = this.createSensorNodeInfoFrom(specification);
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        logic.onNodeAdded(nodeInfo);
+      }
+    }, this.delay * 1000L);
   }
 
   private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {
@@ -62,50 +94,9 @@ public class RealCommunicationChannel implements CommunicationChannel {
     int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
     SensorActuatorNodeInfo info = new SensorActuatorNodeInfo(nodeId);
     if (parts.length == 2) {
-      parseActuators(parts[1], info);
+      NodeParser.parseActuators(parts[1], info, logic);
     }
     return info;
-  }
-
-  private void parseActuators(String actuatorSpecification, SensorActuatorNodeInfo info) {
-    String[] parts = actuatorSpecification.split(" ");
-    for (String part : parts) {
-      parseActuatorInfo(part, info);
-    }
-  }
-
-  private void parseActuatorInfo(String s, SensorActuatorNodeInfo info) {
-    String[] actuatorInfo = s.split("_");
-    if (actuatorInfo.length != 2) {
-      throw new IllegalArgumentException("Invalid actuator info format: " + s);
-    }
-    int actuatorCount = parseIntegerOrError(actuatorInfo[0],
-        "Invalid actuator count: " + actuatorInfo[0]);
-    String actuatorType = actuatorInfo[1];
-    for (int i = 0; i < actuatorCount; ++i) {
-      Actuator actuator = new Actuator(actuatorType, info.getId());
-      actuator.setListener(logic);
-      info.addActuator(actuator);
-    }
-  }
-
-
-  /**
-   * Spawn a new sensor/actuator node information after a given delay.
-   *
-   * @param specification A (temporary) manual configuration of the node in the following format
-   *                      [nodeId] semicolon [actuator_count_1] underscore [actuator_type_1] space
-   *                      ... space [actuator_count_M] underscore [actuator_type_M]
-   */
-  public void spawnNode(String specification) {
-    SensorActuatorNodeInfo nodeInfo = createSensorNodeInfoFrom(specification);
-    Timer timer = new Timer();
-    timer.schedule(new TimerTask() {
-      @Override
-      public void run() {
-        logic.onNodeAdded(nodeInfo);
-      }
-    }, this.delay * 1000L);
   }
 
   /**
@@ -124,7 +115,7 @@ public class RealCommunicationChannel implements CommunicationChannel {
       throw new IllegalArgumentException("Incorrect specification format: " + specification);
     }
     int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
-    List<SensorReading> sensors = parseSensors(parts[1]);
+    List<SensorReading> sensors = NodeParser.parseSensors(parts[1]);
     Timer timer = new Timer();
     timer.schedule(new TimerTask() {
       @Override
@@ -147,30 +138,6 @@ public class RealCommunicationChannel implements CommunicationChannel {
         logic.onNodeRemoved(nodeId);
       }
     }, this.delay * 1000L);
-  }
-
-  private List<SensorReading> parseSensors(String sensorInfo) {
-    List<SensorReading> readings = new LinkedList<>();
-    String[] readingInfo = sensorInfo.split(",");
-    for (String reading : readingInfo) {
-      readings.add(parseReading(reading));
-    }
-    return readings;
-  }
-
-  private SensorReading parseReading(String reading) {
-    String[] assignmentParts = reading.split("=");
-    if (assignmentParts.length != 2) {
-      throw new IllegalArgumentException("Invalid sensor reading specified: " + reading);
-    }
-    String[] valueParts = assignmentParts[1].split(" ");
-    if (valueParts.length != 2) {
-      throw new IllegalArgumentException("Invalid sensor value/unit: " + reading);
-    }
-    String sensorType = assignmentParts[0];
-    double value = parseDoubleOrError(valueParts[0], "Invalid sensor value: " + valueParts[0]);
-    String unit = valueParts[1];
-    return new SensorReading(sensorType, value, unit);
   }
 
   /**

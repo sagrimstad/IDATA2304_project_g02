@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import no.ntnu.idata2304.project.tools.ClientHandler;
 import no.ntnu.idata2304.project.tools.Logger;
@@ -17,6 +18,8 @@ import no.ntnu.idata2304.project.tools.Logger;
  */
 public class GreenhouseServer {
 
+  private final Map<Integer, SensorActuatorNode> nodes;
+  
   public static final int PORT_NUMBER = 1337;
   boolean isServerRunning;
   private final List<ClientHandler> connectedClients = new ArrayList<>();
@@ -26,8 +29,17 @@ public class GreenhouseServer {
   /**
    * Constructs an instance of the GreenhouseServer class.
    */
-  public GreenhouseServer() {
-    // Intentionally left blank
+  public GreenhouseServer(Map<Integer, SensorActuatorNode> nodes) {
+    this.nodes = nodes;
+  }
+
+  /**
+   * Returns the nodes created in the simulator.
+   * 
+   * @return The nodes created in the simulator
+   */
+  public Map<Integer, SensorActuatorNode> getNodes() {
+    return this.nodes;
   }
 
   /**

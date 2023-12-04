@@ -41,6 +41,15 @@ public class ActuatorCollection implements Iterable<Actuator> {
     return actuators.get(id);
   }
 
+  /**
+   * Returns all actuators.
+   * 
+   * @return All actuators
+   */
+  public Map<Integer, Actuator> getAll() {
+    return this.actuators;
+  }
+
   @Override
   public Iterator<Actuator> iterator() {
     return actuators.values().iterator();

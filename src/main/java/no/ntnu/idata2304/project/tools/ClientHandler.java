@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.List;
 
 import no.ntnu.idata2304.project.greenhouse.GreenhouseServer;
-import no.ntnu.idata2304.project.message.Command;
 import no.ntnu.idata2304.project.message.CurrentChannelMessage;
 import no.ntnu.idata2304.project.message.Message;
 import no.ntnu.idata2304.project.message.StateMessage;
@@ -15,7 +15,7 @@ import no.ntnu.idata2304.project.message.StateMessage;
 /**
  * Handler for one specific client connection (TCP).
  *
- * @author Group 2
+ * @author  Group 2
  * @version v1.0 (2023.11.10)
  */
 public class ClientHandler extends Thread {
@@ -44,6 +44,7 @@ public class ClientHandler extends Thread {
    */
   @Override
   public void run() {
+    this.initialize();
     String response;
     do {
       String clientRequest = this.readClientRequest();
@@ -76,6 +77,17 @@ public class ClientHandler extends Thread {
     // } while (response != null);
     // System.out.println("Client " + this.socket.getRemoteSocketAddress() + " leaving");
     // this.server.clientDisconnected(this);
+  }
+
+  /**
+   * Initializes the client by converting all nodes to strings and sending them to the client.
+   */
+  private void initialize() {
+    List<String> nodeStrings = NodeSerializer.toString(this.server.getNodes());
+    for (String nodeString : nodeStrings) {
+      this.sendToClient(nodeString);
+    }
+    this.sendToClient("0");
   }
 
   private boolean isBroadcastMessage(Message response) {
