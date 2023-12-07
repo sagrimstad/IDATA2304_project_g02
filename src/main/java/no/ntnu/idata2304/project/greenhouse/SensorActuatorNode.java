@@ -19,7 +19,6 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   // How often to generate new sensor values, in seconds.
   private static final long SENSING_DELAY = 5000;
   private final int id;
-
   private final List<Sensor> sensors = new LinkedList<>();
   private final ActuatorCollection actuators = new ActuatorCollection();
 
