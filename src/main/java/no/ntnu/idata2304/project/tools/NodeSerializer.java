@@ -15,9 +15,10 @@ import no.ntnu.idata2304.project.greenhouse.SensorActuatorNode;
  * @version v2.0 (2023.12.07)
  */
 public class NodeSerializer {
+
   /**
    * Constructs an instance of the NodeSerializer class.
-   * 
+   *
    * <p>This class is not supposed to be instantiated.</p>
    */
   private NodeSerializer() {
