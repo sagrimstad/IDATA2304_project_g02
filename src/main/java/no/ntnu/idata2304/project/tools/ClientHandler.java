@@ -16,7 +16,7 @@ import no.ntnu.idata2304.project.message.StateMessage;
  * Handler for one specific client connection (TCP).
  *
  * @author  Group 2
- * @version v1.0 (2023.11.10)
+ * @version v2.0 (2023.12.07)
  */
 public class ClientHandler extends Thread {
 
@@ -90,12 +90,23 @@ public class ClientHandler extends Thread {
   }
 
   /**
-   * Initializes the client by converting all nodes to strings and sending them to the client.
+   * Initializes the client by serializing all nodes along with their actuators and sensors to
+   * strings and sending them to the client.
+   * 
+   * <p>The nodes with actuators are serialized and sent before the sensors, since the nodes are
+   * created regardless of the actuators in the first step.</p>
    */
   private void initialize() {
     List<String> nodeStrings = NodeSerializer.toString(this.server.getNodes());
     for (String nodeString : nodeStrings) {
       this.sendToClient(nodeString);
+    }
+    this.sendToClient("0");
+    List<String> sensorStrings = NodeSerializer.toSensorString(this.server.getNodes());
+    if (!sensorStrings.isEmpty()) {
+      for (String sensorString : sensorStrings) {
+        this.sendToClient(sensorString);
+      }
     }
     this.sendToClient("0");
   }

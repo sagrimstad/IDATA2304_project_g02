@@ -38,8 +38,9 @@ public class RealCommunicationChannel implements CommunicationChannel {
   }
 
   /**
-   * Starts the communcation channel by receiving commands from the server, telling the control panel
-   * what nodes to spawn.
+   * Starts the communication channel by receiving commands from the server, first telling the
+   * control panel what nodes along with actuators to spawn, then what sensors to advertise to each
+   * node.
    */
   public void start() {
     try {
@@ -48,6 +49,12 @@ public class RealCommunicationChannel implements CommunicationChannel {
         serverCommand = this.socketReader.readLine();
         if (!serverCommand.equals("0")) {
           this.spawnNode(serverCommand);
+        }
+      } while (!serverCommand.equals("0"));
+      do {
+        serverCommand = this.socketReader.readLine();
+        if (!serverCommand.equals("0")) {
+          this.advertiseSensorData(serverCommand);
         }
       } while (!serverCommand.equals("0"));
     } catch (IOException e) {
@@ -71,6 +78,7 @@ public class RealCommunicationChannel implements CommunicationChannel {
         logic.onNodeAdded(nodeInfo);
       }
     }, this.delay * 1000L);
+    this.delay++;
   }
 
   private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {
@@ -128,6 +136,7 @@ public class RealCommunicationChannel implements CommunicationChannel {
         logic.onSensorData(nodeId, sensors);
       }
     }, this.delay * 1000L);
+    this.delay++;
   }
 
   /**
