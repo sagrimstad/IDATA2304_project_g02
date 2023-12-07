@@ -22,7 +22,6 @@ slowly or barely at all.
 Going forward, further understanding and staring to see progress is the main objective of the 
 next sprint. We need small and meaningful progression to stay motivated.
 
-
 ## Sprint 3
 
 This sprint did not go as planned either. We were still struggling with the same problems and 
