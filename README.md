@@ -5,4 +5,4 @@ To run the application, either:
 - Or run the "GreenhouseGuiStarter" - class
 
 A visualization of how the communication could possibly look like:
-![img.png](src/doc/img.png)
+![img2.jpg](src%2Fdoc%2Fimg2.jpg)
