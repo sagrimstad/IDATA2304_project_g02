@@ -10,14 +10,15 @@ import no.ntnu.idata2304.project.greenhouse.SensorActuatorNode;
 /**
  * The NodeSerializer class represents a tool that serializes nodes to a list of one or more
  * strings.
- * 
- * @author  Group 2
+ *
+ * @author Group 2
  * @version v1.0 (2023.12.04)
  */
 public class NodeSerializer {
+
   /**
    * Constructs an instance of the NodeSerializer class.
-   * 
+   *
    * <p>This class is not supposed to be instantiated.</p>
    */
   private NodeSerializer() {
@@ -27,10 +28,10 @@ public class NodeSerializer {
   /**
    * Returns a list of strings serialized from a specified map of nodes containing all nodes on a
    * string format.
-   * 
+   *
    * @param nodes A specified map of nodes
    * @return A list of strings serialized from a specified map of nodes containing all nodes on a
-   *         string format
+   * string format
    */
   public static List<String> toString(Map<Integer, SensorActuatorNode> nodes) {
     List<String> list = new ArrayList<String>();
