@@ -8,9 +8,6 @@ import java.net.Socket;
 import java.util.List;
 
 import no.ntnu.idata2304.project.greenhouse.GreenhouseServer;
-import no.ntnu.idata2304.project.message.CurrentChannelMessage;
-import no.ntnu.idata2304.project.message.Message;
-import no.ntnu.idata2304.project.message.StateMessage;
 
 /**
  * Handler for one specific client connection (TCP).
@@ -115,10 +112,10 @@ public class ClientHandler extends Thread {
     return message.contains(":");
   }
 
-  private boolean isBroadcastMessage(Message response) {
-    return response instanceof StateMessage
-        || response instanceof CurrentChannelMessage;
-  }
+  // private boolean isBroadcastMessage(Message response) {
+  //   return response instanceof StateMessage
+  //       || response instanceof CurrentChannelMessage;
+  // }
 
   /**
    * Read one message form the socket - from the client.
