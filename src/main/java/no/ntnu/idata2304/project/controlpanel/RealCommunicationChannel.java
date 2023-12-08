@@ -156,35 +156,6 @@ public class RealCommunicationChannel implements CommunicationChannel {
     }, this.delay * 1000L);
   }
 
-  /**
-   * Sends a specified command over the communication channel.
-   * 
-   * @param command A specified command
-   */
-  public void sendCommand(String command) {
-    this.socketWriter.println(command);
-    Logger.info("Sending " + command);
-  }
-
-  /**
-   * Sends a sensor reading over the communication channel
-   *
-   * @param sensorReading A specified sensor reading
-   */
-  public void sendSensorReading(String sensorReading) {
-    this.socketWriter.println(sensorReading);
-    Logger.info("Sending " + sensorReading);
-    //TODO: Actually send the message over the socket!
-  }
-
-  /**
-   * Sends a change in an actuator state. Whenever an actuator is turned on or off (the state is
-   * changed), the change is sent.
-   *
-   * @param nodeId     ID of the node to which the actuator is attached
-   * @param actuatorId Node-wide unique ID of the actuator
-   * @param isOn       When true, actuator must be turned on; off when false.
-   */
   @Override
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
     this.socketWriter.println(nodeId + ";" + actuatorId + ":" + isOn);
