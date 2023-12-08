@@ -177,11 +177,17 @@ public class RealCommunicationChannel implements CommunicationChannel {
     //TODO: Actually send the message over the socket!
   }
 
+  /**
+   * Sends a change in an actuator state. Whenever an actuator is turned on or off (the state is
+   * changed), the change is sent.
+   *
+   * @param nodeId     ID of the node to which the actuator is attached
+   * @param actuatorId Node-wide unique ID of the actuator
+   * @param isOn       When true, actuator must be turned on; off when false.
+   */
   @Override
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
-    String state = isOn ? "ON" : "off";
-    Logger.info("Sending command to greenhouse: turn " + state + " actuator"
-        + "[" + actuatorId + "] on node " + nodeId);
+    this.socketWriter.println(nodeId + ";" + actuatorId + ":" + isOn);
   }
 
   @Override

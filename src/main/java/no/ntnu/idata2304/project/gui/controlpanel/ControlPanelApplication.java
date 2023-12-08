@@ -137,6 +137,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
           actuator.turnOff();
         }
         actuatorPane.update(actuator);
+        channel.sendActuatorChange(nodeId, actuatorId, isOn);
       } else {
         Logger.error(" actuator not found");
       }

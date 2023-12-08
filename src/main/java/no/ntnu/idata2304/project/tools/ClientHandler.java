@@ -7,12 +7,13 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
 
+import no.ntnu.idata2304.project.greenhouse.Actuator;
 import no.ntnu.idata2304.project.greenhouse.GreenhouseServer;
 
 /**
  * Handler for one specific client connection (TCP).
  *
- * @author  Group 2
+ * @author Group 2
  * @version v2.0 (2023.12.07)
  */
 public class ClientHandler extends Thread {
@@ -46,6 +47,7 @@ public class ClientHandler extends Thread {
     do {
       receivedMessage = readClientRequest();
       if (receivedMessage != null) {
+        handleActuatorChange(receivedMessage);
         if (isSensorReading(receivedMessage)) {
           handleReceivedMessage(receivedMessage);
         } else {
@@ -89,7 +91,7 @@ public class ClientHandler extends Thread {
   /**
    * Initializes the client by serializing all nodes along with their actuators and sensors to
    * strings and sending them to the client.
-   * 
+   *
    * <p>The nodes with actuators are serialized and sent before the sensors, since the nodes are
    * created regardless of the actuators in the first step.</p>
    */
@@ -166,6 +168,60 @@ public class ClientHandler extends Thread {
     } else {
       // Handle incorrect message format or unexpected data
       System.out.println("Received invalid sensor reading message: " + message);
+    }
+  }
+
+  /**
+   * Handles the incoming command and changes/updates the wanted actuator to the correct state. The
+   * only type of command to come from the actuator is its change in state.
+   */
+  private void handleActuatorChange(String command) {
+    try {
+      if (command != null) {
+        Logger.info(command);
+        command = this.socketReader.readLine();
+        String[] parts = command.split(";|:");
+        int nodeId = Integer.parseInt(parts[0]);
+        int actuatorId = Integer.parseInt(parts[1]);
+        String isOn = parts[2];
+
+        // check if the nodeId is valid
+        if (!this.server.getNodes().containsKey(nodeId)) {
+          System.err.println("Error: Invalid nodeId");
+          return;
+        }
+
+        // check if the actuatorId is valid
+        //if (!this.server.getNodes().get(nodeId).getActuators().getAll().containsKey(actuatorId)) {
+        //  System.err.println("Error: Invalid actuatorId");
+        //  return;
+        //}
+
+        Actuator actuator =
+            this.server.getNodes().get(nodeId).getActuators().get(actuatorId);
+        if (actuator == null) {
+          System.err.println("Actuator is null");
+          return;
+        }
+
+        // if turn on command and actuator is off:
+        if (isOn.equals("true") && !actuator.isOn()) {
+          actuator.toggle();
+        } else {
+          //handle potential error
+        }
+
+        // if turn off command and actuator is on:
+        if (isOn.equals("false") && actuator.isOn()) {
+          actuator.toggle();
+        } else {
+          //handle potential error
+        }
+      } else {
+        System.err.println("Incorrect command: " + command);
+      }
+    } catch (IOException e) {
+      System.err.println("Error while handling actuator change: " + e.getMessage());
     }
   }
 

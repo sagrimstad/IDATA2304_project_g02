@@ -92,7 +92,7 @@ public class Actuator {
   }
 
   /**
-   * Toggle the actuator - if it was off, not it will be ON, and vice versa.
+   * Toggle the actuator - if it was off, now it will be ON, and vice versa.
    */
   public void toggle() {
     this.on = !this.on;
