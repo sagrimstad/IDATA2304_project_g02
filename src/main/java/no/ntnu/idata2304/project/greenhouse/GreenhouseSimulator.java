@@ -48,15 +48,14 @@ public class GreenhouseSimulator {
    * Start a simulation of a greenhouse - all the sensor and actuator nodes inside it.
    */
   public void start() {
-    initiateCommunication();
     for (SensorActuatorNode node : nodes.values()) {
       node.start();
     }
     for (PeriodicSwitch periodicSwitch : periodicSwitches) {
       periodicSwitch.start();
     }
-
     Logger.info("Simulator started");
+    initiateCommunication();
   }
 
   private void initiateCommunication() {
