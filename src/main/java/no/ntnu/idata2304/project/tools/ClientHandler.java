@@ -67,25 +67,6 @@ public class ClientHandler extends Thread {
         }
       }
     } while (receivedMessage != null);
-    // Message response;
-    // do {
-    //   Command clientCommand = readClientRequest();
-    //   if (clientCommand != null) {
-    //     System.out.println("Received a " + clientCommand.getClass().getSimpleName());
-    //     response = clientCommand.execute(server.getLogic());
-    //     if (response != null) {
-    //       if (isBroadcastMessage(response)) {
-    //         this.server.sendResponseToAllClients(response);
-    //       } else {
-    //         sendToClient(response);
-    //       }
-    //     }
-    //   } else {
-    //     response = null;
-    //   }
-    // } while (response != null);
-    // System.out.println("Client " + this.socket.getRemoteSocketAddress() + " leaving");
-    // this.server.clientDisconnected(this);
   }
 
   /**
@@ -133,20 +114,6 @@ public class ClientHandler extends Thread {
       Logger.error("Could not receive client request");
     }
     return clientRequest;
-    // Message clientCommand = null;
-    // try {
-    //   String rawClientRequest = this.socketReader.readLine();
-    //   clientCommand = MessageSerializer.fromString(rawClientRequest);
-    //   if (!(clientCommand instanceof Command)) {
-    //     if (clientCommand != null) {
-    //       System.err.println("Wrong message form the client: " + clientCommand);
-    //     }
-    //     clientCommand = null;
-    //   }
-    // } catch (IOException e) {
-    //   System.err.println("Could not recieve client request: " + e.getMessage());
-    // }
-    // return (Command) clientCommand;
   }
 
   /**
@@ -206,6 +173,7 @@ public class ClientHandler extends Thread {
 
         // if turn on command and actuator is off:
         if (isOn.equals("true") && !actuator.isOn()) {
+          this.server.getNodes().get(nodeId).toggleActuator(actuatorId);
           actuator.toggle();
         } else {
           //handle potential error

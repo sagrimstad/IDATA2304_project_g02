@@ -41,6 +41,10 @@ actuators.
 5. Control panels then sends (if needed) commands or instructions to the server to change the state of the actuator(s).
 6. Then steps 3-5 will loop for as long as needed/wanted.
 
+The sensor nodes will actively report the information. The clients/control-panels subscribe to the information.
+This would make the information flow a publish-subscribe pattern. Changes made by one component are communicated via
+a central component, the server.
+
 Data send:
 - temperature
 - humidity
