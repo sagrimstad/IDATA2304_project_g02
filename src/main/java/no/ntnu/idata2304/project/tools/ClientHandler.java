@@ -7,8 +7,10 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
 
+import no.ntnu.idata2304.project.greenhouse.Actuator;
 import no.ntnu.idata2304.project.greenhouse.GreenhouseServer;
 import no.ntnu.idata2304.project.greenhouse.SensorActuatorNode;
+import no.ntnu.idata2304.project.listeners.common.ActuatorListener;
 
 /**
  * Handler for one specific client connection (TCP).
@@ -16,7 +18,7 @@ import no.ntnu.idata2304.project.greenhouse.SensorActuatorNode;
  * @author Group 2
  * @version v2.0 (2023.12.07)
  */
-public class ClientHandler extends Thread {
+public class ClientHandler extends Thread implements ActuatorListener {
 
   private final GreenhouseServer server;
   private final Socket socket;
@@ -47,12 +49,12 @@ public class ClientHandler extends Thread {
     do {
       receivedMessage = readClientRequest();
       if (receivedMessage != null) {
-        handleActuatorChange(receivedMessage);
         String response;
         do {
           String clientRequest = this.readClientRequest();
           if (clientRequest != null) {
             Logger.info("Received " + clientRequest);
+            handleActuatorChangeCommand(receivedMessage);
             response = "OK";
             this.sendToClient(response);
           } else {
@@ -112,30 +114,23 @@ public class ClientHandler extends Thread {
    * Handles the incoming command and changes/updates the wanted actuator to the correct state. The
    * only type of command to come from the actuator is its change in state.
    */
-  private void handleActuatorChange(String command) {
+  private void handleActuatorChangeCommand(String command) {
     try {
       if (command != null) {
-        Logger.info(command);
+        Logger.info(command); // temp line, only for debugging
         command = this.socketReader.readLine();
-        String[] parts = command.split(";|:");
+        String[] parts = command.split("[;:]");
         int nodeId = Integer.parseInt(parts[0]);
         int actuatorId = Integer.parseInt(parts[1]);
         String isOn = parts[2];
 
         SensorActuatorNode node = this.server.getNodes().get(nodeId);
+        Actuator actuator = node.getActuator(actuatorId);
 
-        // if turn on command and actuator is off:
-        if (isOn.equals("true") && !node.isRunning()) {
-          node.toggleActuator(actuatorId);
-        } else {
-          //handle potential error
-        }
-
-        // if turn off command and actuator is on:
-        if (isOn.equals("false") && node.isRunning()) {
-          node.toggleActuator(actuatorId);
-        } else {
-          //handle potential error
+        switch (isOn) {
+          case "true" -> actuator.turnOn();
+          case "false" -> actuator.turnOff();
+          default -> Logger.error("Error while changing state for actuator: " + actuator);
         }
       } else {
         System.err.println("Incorrect command: " + command);
@@ -168,5 +163,10 @@ public class ClientHandler extends Thread {
     } catch (IOException e) {
       System.err.println("Error while closing sockets: " + e.getMessage());
     }
+  }
+
+  @Override
+  public void actuatorUpdated(int nodeId, Actuator actuator) {
+    //TODO: Send actuator state to control panel
   }
 }

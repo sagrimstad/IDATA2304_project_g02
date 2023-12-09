@@ -61,7 +61,7 @@ public class ControlPanelStarter {
     if (channel.open()) {
       channel.start();
     } else {
-      Logger.error("Communcation channel could not be opened");
+      Logger.error("Communication channel could not be opened");
     }
     // TODO - here you initiate TCP/UDP socket communication
     // You communication class(es) may want to get reference to the logic and call necessary
