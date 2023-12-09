@@ -5,10 +5,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import no.ntnu.idata2304.project.greenhouse.Actuator;
 import no.ntnu.idata2304.project.greenhouse.GreenhouseServer;
+import no.ntnu.idata2304.project.greenhouse.SensorActuatorNode;
+import no.ntnu.idata2304.project.listeners.greenhouse.SensorListener;
 
 /**
  * Handler for one specific client connection (TCP).
@@ -16,7 +20,7 @@ import no.ntnu.idata2304.project.greenhouse.GreenhouseServer;
  * @author Group 2
  * @version v2.0 (2023.12.07)
  */
-public class ClientHandler extends Thread {
+public class ClientHandler extends Thread implements SensorListener {
 
   private final GreenhouseServer server;
   private final Socket socket;
@@ -77,17 +81,9 @@ public class ClientHandler extends Thread {
    * created regardless of the actuators in the first step.</p>
    */
   private void initialize() {
-    List<String> nodeStrings = NodeSerializer.toString(this.server.getNodes());
-    for (String nodeString : nodeStrings) {
-      this.sendToClient(nodeString);
-    }
+    this.sendNodesToClient(this.server.getNodes());
     this.sendToClient("0");
-    List<String> sensorStrings = NodeSerializer.toSensorString(this.server.getNodes());
-    if (!sensorStrings.isEmpty()) {
-      for (String sensorString : sensorStrings) {
-        this.sendToClient(sensorString);
-      }
-    }
+    this.sendSensorsToClient(this.server.getNodes());
     this.sendToClient("0");
   }
 
@@ -202,6 +198,22 @@ public class ClientHandler extends Thread {
     this.socketWriter.println(message);
   }
 
+  private void sendNodesToClient(Map<Integer, SensorActuatorNode> nodes) {
+    List<String> nodeStrings = NodeSerializer.toString(nodes);
+    for (String nodeString : nodeStrings) {
+      this.sendToClient(nodeString);
+    }
+  }
+
+  private void sendSensorsToClient(Map<Integer, SensorActuatorNode> nodes) {
+    List<String> sensorStrings = NodeSerializer.toSensorString(nodes);
+    if (!sensorStrings.isEmpty()) {
+      for (String sensorString : sensorStrings) {
+        this.sendToClient(sensorString);
+      }
+    }
+  }
+
   public void close() {
     try {
       if (this.socketWriter != null) {
@@ -216,5 +228,12 @@ public class ClientHandler extends Thread {
     } catch (IOException e) {
       System.err.println("Error while closing sockets: " + e.getMessage());
     }
+  }
+
+  @Override
+  public void sensorsUpdated(SensorActuatorNode node) {
+    Map<Integer, SensorActuatorNode> nodes = new HashMap<>();
+    nodes.put(node.getId(), node);
+    this.sendSensorsToClient(nodes);
   }
 }

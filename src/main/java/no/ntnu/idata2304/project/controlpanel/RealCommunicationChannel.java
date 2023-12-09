@@ -48,13 +48,34 @@ public class RealCommunicationChannel implements CommunicationChannel {
       do {
         serverCommand = this.socketReader.readLine();
         if (!serverCommand.equals("0")) {
-          this.spawnNode(serverCommand);
+          this.spawnNode(serverCommand, delay);
+          delay++;
         }
       } while (!serverCommand.equals("0"));
       do {
         serverCommand = this.socketReader.readLine();
         if (!serverCommand.equals("0")) {
-          this.advertiseSensorData(serverCommand);
+          this.advertiseSensorData(serverCommand, delay);
+          delay++;
+        }
+      } while (!serverCommand.equals("0"));
+    } catch (IOException e) {
+      Logger.error("Could not receive command from server");
+    }
+  }
+
+  public void run() {
+    try {
+      String serverCommand;
+      do {
+        serverCommand = this.socketReader.readLine();
+        Logger.info("Received " + serverCommand + " from server");
+        if (!serverCommand.equals("0")) {
+          try {
+            this.advertiseSensorData(serverCommand, delay);
+          } catch (IllegalArgumentException e) {
+            // Intentionally left blank
+          }
         }
       } while (!serverCommand.equals("0"));
     } catch (IOException e) {
@@ -69,7 +90,7 @@ public class RealCommunicationChannel implements CommunicationChannel {
    *                      [nodeId] semicolon [actuator_count_1] underscore [actuator_type_1] space
    *                      ... space [actuator_count_M] underscore [actuator_type_M]
    */
-  private void spawnNode(String specification) {
+  private void spawnNode(String specification, int delay) {
     SensorActuatorNodeInfo nodeInfo = this.createSensorNodeInfoFrom(specification);
     Timer timer = new Timer();
     timer.schedule(new TimerTask() {
@@ -77,8 +98,7 @@ public class RealCommunicationChannel implements CommunicationChannel {
       public void run() {
         logic.onNodeAdded(nodeInfo);
       }
-    }, this.delay * 1000L);
-    this.delay++;
+    }, delay * 1000L);
   }
 
   private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {
@@ -102,14 +122,14 @@ public class RealCommunicationChannel implements CommunicationChannel {
    *
    * @param nodeId ID of the removed node
    */
-  public void advertiseRemovedNode(int nodeId) {
+  public void advertiseRemovedNode(int nodeId, int delay) {
     Timer timer = new Timer();
     timer.schedule(new TimerTask() {
       @Override
       public void run() {
         logic.onNodeRemoved(nodeId);
       }
-    }, this.delay * 1000L);
+    }, delay * 1000L);
   }
 
   /**
@@ -119,7 +139,7 @@ public class RealCommunicationChannel implements CommunicationChannel {
    *                      [sensor_type_1] equals [sensor_value_1] space [unit_1] comma ... comma
    *                      [sensor_type_N] equals [sensor_value_N] space [unit_N]
    */
-  public void advertiseSensorData(String specification) {
+  public void advertiseSensorData(String specification, int delay) {
     if (specification == null || specification.isEmpty()) {
       throw new IllegalArgumentException("Sensor specification can't be empty");
     }
@@ -135,8 +155,7 @@ public class RealCommunicationChannel implements CommunicationChannel {
       public void run() {
         logic.onSensorData(nodeId, sensors);
       }
-    }, this.delay * 1000L);
-    this.delay++;
+    }, delay * 1000L);
   }
 
   /**
@@ -146,14 +165,14 @@ public class RealCommunicationChannel implements CommunicationChannel {
    * @param actuatorId ID of the actuator.
    * @param on         When true, actuator is on; off when false.
    */
-  public void advertiseActuatorState(int nodeId, int actuatorId, boolean on) {
+  public void advertiseActuatorState(int nodeId, int actuatorId, boolean on, int delay) {
     Timer timer = new Timer();
     timer.schedule(new TimerTask() {
       @Override
       public void run() {
         logic.onActuatorStateChanged(nodeId, actuatorId, on);
       }
-    }, this.delay * 1000L);
+    }, delay * 1000L);
   }
 
   @Override

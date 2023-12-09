@@ -1,7 +1,6 @@
 package no.ntnu.idata2304.project.listeners.greenhouse;
 
-import java.util.List;
-import no.ntnu.idata2304.project.greenhouse.Sensor;
+import no.ntnu.idata2304.project.greenhouse.SensorActuatorNode;
 
 /**
  * Listener for sensor update events. This will (probably) be usable only on the sensor/actuator
@@ -13,7 +12,7 @@ public interface SensorListener {
   /**
    * An event that is fired every time sensor values are updated.
    *
-   * @param sensors A list of sensors having new values (readings)
+   * @param node The node having a list of sensors with new values (readings)
    */
-  void sensorsUpdated(List<Sensor> sensors);
+  void sensorsUpdated(SensorActuatorNode node);
 }

@@ -3,6 +3,7 @@ package no.ntnu.idata2304.project.gui.controlpanel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -14,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import no.ntnu.idata2304.project.controlpanel.CommunicationChannel;
 import no.ntnu.idata2304.project.controlpanel.ControlPanelLogic;
+import no.ntnu.idata2304.project.controlpanel.RealCommunicationChannel;
 import no.ntnu.idata2304.project.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.idata2304.project.greenhouse.Actuator;
 import no.ntnu.idata2304.project.greenhouse.SensorReading;
@@ -77,12 +79,18 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     if (!channel.open()) {
       logic.onCommunicationChannelClosed();
     }
+    runCommunicationChannel();
   }
 
   private static Label createEmptyContent() {
     Label l = new Label("Waiting for node data...");
     l.setAlignment(Pos.CENTER);
     return l;
+  }
+
+  private void runCommunicationChannel() {
+    RealCommunicationChannel realChannel = (RealCommunicationChannel) channel;
+    realChannel.run();
   }
 
   @Override
