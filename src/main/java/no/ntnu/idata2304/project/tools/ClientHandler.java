@@ -12,6 +12,7 @@ import java.util.Map;
 import no.ntnu.idata2304.project.greenhouse.Actuator;
 import no.ntnu.idata2304.project.greenhouse.GreenhouseServer;
 import no.ntnu.idata2304.project.greenhouse.SensorActuatorNode;
+import no.ntnu.idata2304.project.listeners.common.ActuatorListener;
 import no.ntnu.idata2304.project.listeners.greenhouse.SensorListener;
 
 /**
@@ -20,7 +21,7 @@ import no.ntnu.idata2304.project.listeners.greenhouse.SensorListener;
  * @author Group 2
  * @version v2.0 (2023.12.07)
  */
-public class ClientHandler extends Thread implements SensorListener {
+public class ClientHandler extends Thread implements ActuatorListener, SensorListener {
 
   private final GreenhouseServer server;
   private final Socket socket;
@@ -51,24 +52,20 @@ public class ClientHandler extends Thread implements SensorListener {
     do {
       receivedMessage = readClientRequest();
       if (receivedMessage != null) {
-        handleActuatorChange(receivedMessage);
-        if (isSensorReading(receivedMessage)) {
-          handleReceivedMessage(receivedMessage);
-        } else {
-          String response;
-          do {
-            String clientRequest = this.readClientRequest();
-            if (clientRequest != null) {
-              Logger.info("Received " + clientRequest);
-              response = "OK";
-              this.sendToClient(response);
-            } else {
-              response = null;
-            }
-          } while (response != null);
-          Logger.info("Client " + this.socket.getRemoteSocketAddress() + " leaving");
-          this.server.clientDisconnected(this);
-        }
+        String response;
+        do {
+          String clientRequest = this.readClientRequest();
+          if (clientRequest != null) {
+            Logger.info("Received " + clientRequest);
+            handleActuatorChangeCommand(receivedMessage);
+            response = "OK";
+            this.sendToClient(response);
+          } else {
+            response = null;
+          }
+        } while (response != null);
+        Logger.info("Client " + this.socket.getRemoteSocketAddress() + " leaving");
+        this.server.clientDisconnected(this);
       }
     } while (receivedMessage != null);
   }
@@ -85,10 +82,6 @@ public class ClientHandler extends Thread implements SensorListener {
     this.sendToClient("0");
     this.sendSensorsToClient(this.server.getNodes());
     this.sendToClient("0");
-  }
-
-  private boolean isSensorReading(String message) {
-    return message.contains(":");
   }
 
   // private boolean isBroadcastMessage(Message response) {
@@ -113,73 +106,26 @@ public class ClientHandler extends Thread implements SensorListener {
   }
 
   /**
-   * Handles a message received from the server.
-   *
-   * @param message the message to handle.
-   */
-  public void handleReceivedMessage(String message) {
-    //TODO: implement logic to parse sensor reading. perhaps move to a different class
-    String[] parts = message.split(":");
-    if (parts.length == 4) {
-      int sensorId = Integer.parseInt(parts[1]);
-      String type = parts[1];
-      double value = Double.parseDouble(parts[2]);
-      String unit = parts[3];
-
-      System.out.println("Received sensor reading: " + "Sensor ID: " + sensorId
-          + "Type: " + type + "Value: " + value + "Unit: " + unit);
-    } else {
-      // Handle incorrect message format or unexpected data
-      System.out.println("Received invalid sensor reading message: " + message);
-    }
-  }
-
-  /**
    * Handles the incoming command and changes/updates the wanted actuator to the correct state. The
    * only type of command to come from the actuator is its change in state.
    */
-  private void handleActuatorChange(String command) {
+  private void handleActuatorChangeCommand(String command) {
     try {
       if (command != null) {
-        Logger.info(command);
+        Logger.info(command); // temp line, only for debugging
         command = this.socketReader.readLine();
-        String[] parts = command.split(";|:");
+        String[] parts = command.split("[;:]");
         int nodeId = Integer.parseInt(parts[0]);
         int actuatorId = Integer.parseInt(parts[1]);
         String isOn = parts[2];
 
-        // check if the nodeId is valid
-        if (!this.server.getNodes().containsKey(nodeId)) {
-          System.err.println("Error: Invalid nodeId");
-          return;
-        }
+        SensorActuatorNode node = this.server.getNodes().get(nodeId);
+        Actuator actuator = node.getActuator(actuatorId);
 
-        // check if the actuatorId is valid
-        //if (!this.server.getNodes().get(nodeId).getActuators().getAll().containsKey(actuatorId)) {
-        //  System.err.println("Error: Invalid actuatorId");
-        //  return;
-        //}
-
-        Actuator actuator =
-            this.server.getNodes().get(nodeId).getActuators().get(actuatorId);
-        if (actuator == null) {
-          System.err.println("Actuator is null");
-          return;
-        }
-
-        // if turn on command and actuator is off:
-        if (isOn.equals("true") && !actuator.isOn()) {
-          this.server.getNodes().get(nodeId).toggleActuator(actuatorId);
-          actuator.toggle();
-        } else {
-          //handle potential error
-        }
-
-        // if turn off command and actuator is on:
-        if (isOn.equals("false") && actuator.isOn()) {
-          actuator.toggle();
-        } else {
-          //handle potential error
+        switch (isOn) {
+          case "true" -> actuator.turnOn();
+          case "false" -> actuator.turnOff();
+          default -> Logger.error("Error while changing state for actuator: " + actuator);
         }
       } else {
         System.err.println("Incorrect command: " + command);
@@ -228,6 +174,11 @@ public class ClientHandler extends Thread implements SensorListener {
     } catch (IOException e) {
       System.err.println("Error while closing sockets: " + e.getMessage());
     }
+  }
+
+  @Override
+  public void actuatorUpdated(int nodeId, Actuator actuator) {
+    //TODO: Send actuator state to control panel
   }
 
   @Override
