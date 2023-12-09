@@ -44,23 +44,25 @@ public class ClientHandler extends Thread {
   public void run() {
     this.initialize();
     String receivedMessage;
-    receivedMessage = readClientRequest();
-    if (receivedMessage != null) {
-      handleActuatorChange(receivedMessage);
-      String response;
-      do {
-        String clientRequest = this.readClientRequest();
-        if (clientRequest != null) {
-          Logger.info("Received " + clientRequest);
-          response = "OK";
-          this.sendToClient(response);
-        } else {
-          response = null;
-        }
-      } while (response != null);
-      Logger.info("Client " + this.socket.getRemoteSocketAddress() + " leaving");
-      this.server.clientDisconnected(this);
-    }
+    do {
+      receivedMessage = readClientRequest();
+      if (receivedMessage != null) {
+        handleActuatorChange(receivedMessage);
+        String response;
+        do {
+          String clientRequest = this.readClientRequest();
+          if (clientRequest != null) {
+            Logger.info("Received " + clientRequest);
+            response = "OK";
+            this.sendToClient(response);
+          } else {
+            response = null;
+          }
+        } while (response != null);
+        Logger.info("Client " + this.socket.getRemoteSocketAddress() + " leaving");
+        this.server.clientDisconnected(this);
+      }
+    } while (receivedMessage != null);
   }
 
   /**
