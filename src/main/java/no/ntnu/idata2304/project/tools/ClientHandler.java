@@ -7,8 +7,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
 
-import no.ntnu.idata2304.project.greenhouse.Actuator;
 import no.ntnu.idata2304.project.greenhouse.GreenhouseServer;
+import no.ntnu.idata2304.project.greenhouse.SensorActuatorNode;
 
 /**
  * Handler for one specific client connection (TCP).
@@ -44,29 +44,23 @@ public class ClientHandler extends Thread {
   public void run() {
     this.initialize();
     String receivedMessage;
-    do {
-      receivedMessage = readClientRequest();
-      if (receivedMessage != null) {
-        handleActuatorChange(receivedMessage);
-        if (isSensorReading(receivedMessage)) {
-          handleReceivedMessage(receivedMessage);
+    receivedMessage = readClientRequest();
+    if (receivedMessage != null) {
+      handleActuatorChange(receivedMessage);
+      String response;
+      do {
+        String clientRequest = this.readClientRequest();
+        if (clientRequest != null) {
+          Logger.info("Received " + clientRequest);
+          response = "OK";
+          this.sendToClient(response);
         } else {
-          String response;
-          do {
-            String clientRequest = this.readClientRequest();
-            if (clientRequest != null) {
-              Logger.info("Received " + clientRequest);
-              response = "OK";
-              this.sendToClient(response);
-            } else {
-              response = null;
-            }
-          } while (response != null);
-          Logger.info("Client " + this.socket.getRemoteSocketAddress() + " leaving");
-          this.server.clientDisconnected(this);
+          response = null;
         }
-      }
-    } while (receivedMessage != null);
+      } while (response != null);
+      Logger.info("Client " + this.socket.getRemoteSocketAddress() + " leaving");
+      this.server.clientDisconnected(this);
+    }
   }
 
   /**
@@ -91,10 +85,6 @@ public class ClientHandler extends Thread {
     this.sendToClient("0");
   }
 
-  private boolean isSensorReading(String message) {
-    return message.contains(":");
-  }
-
   // private boolean isBroadcastMessage(Message response) {
   //   return response instanceof StateMessage
   //       || response instanceof CurrentChannelMessage;
@@ -117,28 +107,6 @@ public class ClientHandler extends Thread {
   }
 
   /**
-   * Handles a message received from the server.
-   *
-   * @param message the message to handle.
-   */
-  public void handleReceivedMessage(String message) {
-    //TODO: implement logic to parse sensor reading. perhaps move to a different class
-    String[] parts = message.split(":");
-    if (parts.length == 4) {
-      int sensorId = Integer.parseInt(parts[1]);
-      String type = parts[1];
-      double value = Double.parseDouble(parts[2]);
-      String unit = parts[3];
-
-      System.out.println("Received sensor reading: " + "Sensor ID: " + sensorId
-          + "Type: " + type + "Value: " + value + "Unit: " + unit);
-    } else {
-      // Handle incorrect message format or unexpected data
-      System.out.println("Received invalid sensor reading message: " + message);
-    }
-  }
-
-  /**
    * Handles the incoming command and changes/updates the wanted actuator to the correct state. The
    * only type of command to come from the actuator is its change in state.
    */
@@ -152,36 +120,18 @@ public class ClientHandler extends Thread {
         int actuatorId = Integer.parseInt(parts[1]);
         String isOn = parts[2];
 
-        // check if the nodeId is valid
-        if (!this.server.getNodes().containsKey(nodeId)) {
-          System.err.println("Error: Invalid nodeId");
-          return;
-        }
-
-        // check if the actuatorId is valid
-        //if (!this.server.getNodes().get(nodeId).getActuators().getAll().containsKey(actuatorId)) {
-        //  System.err.println("Error: Invalid actuatorId");
-        //  return;
-        //}
-
-        Actuator actuator =
-            this.server.getNodes().get(nodeId).getActuators().get(actuatorId);
-        if (actuator == null) {
-          System.err.println("Actuator is null");
-          return;
-        }
+        SensorActuatorNode node = this.server.getNodes().get(nodeId);
 
         // if turn on command and actuator is off:
-        if (isOn.equals("true") && !actuator.isOn()) {
-          this.server.getNodes().get(nodeId).toggleActuator(actuatorId);
-          actuator.toggle();
+        if (isOn.equals("true") && !node.isRunning()) {
+          node.toggleActuator(actuatorId);
         } else {
           //handle potential error
         }
 
         // if turn off command and actuator is on:
-        if (isOn.equals("false") && actuator.isOn()) {
-          actuator.toggle();
+        if (isOn.equals("false") && node.isRunning()) {
+          node.toggleActuator(actuatorId);
         } else {
           //handle potential error
         }
