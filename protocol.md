@@ -1,12 +1,16 @@
 # Protocol
 This document describes the protocol used in the simulated greenhouse. The greenhouse consists of
-different actuators and nodes that detects changes in the environment inside the greenhouse. These
-actuators and nodes connect to different control panels that gets the information over the network
-and can see the different temperatures, humidity, etc. inside the greenhouse. From the control 
+different  sensor and actuator nodes that detects changes in the environment inside the greenhouse. These
+nodes are connected to a server which provide information to control panels over the network. 
+The control panels can see the different temperatures, humidity, etc. inside the greenhouse. From the control 
 panels, one can operate these actuators. Typical operations would be turning on or off fans, window and heaters. 
 
 ## Terminology
-Actuators, Nodes, control panel, server
+Actuator: A device that produces a motion by converting energy and signals going into the system. In our case the 
+actuator open/closes windows and turn on/off heaters and fans. 
+Sensors: Devices processing environment data such as temperatures and humidity data.
+Control panel: A system displaying information about actuator and sensor nodes. Also works as a remote control. 
+Server: Information handling and information distribution. Feeding information to the control panels.
 
 ## Transport
 This application uses TCP for its communication. TCP (Transmission Control Protocol)
@@ -18,7 +22,7 @@ An ephemeral port number is recommended to be greater than
 
 ## Architecture
 Servers: 
-- One dedicated server hosted centrally in the greenhouse.
+- One dedicated server hosted centrally in the greenhouse. Contains a map of all sensor/actuator nodes
 - Responsible for: Receiving data from sensors, processing that data, 
   accepting new commands from the control panel and changing the actuators accordingly. 
 
@@ -26,11 +30,6 @@ Clients:
 1. Control Panels:
 - Interface for a user to visualize real-time data from the sensors.
 - Sending commands to the server based on user input.
-
-ALTERNATIVE ARCHITECTURE
-Each control panel is a client, and the greenhouse as a whole is the server. The greenhouse
-contains a map of all sensor/actuator nodes, which again contains lists off all sensors and
-actuators.
 
 ## Information flow
 1. The Greenhouse simulator initializes and starts the Greenhouse Server.  
@@ -41,9 +40,9 @@ actuators.
 5. Control panels then sends (if needed) commands or instructions to the server to change the state of the actuator(s).
 6. Then steps 3-5 will loop for as long as needed/wanted.
 
-The sensor nodes will actively report the information. The clients/control-panels subscribe to the information.
-This would make the information flow a publish-subscribe pattern. Changes made by one component are communicated via
-a central component, the server.
+The sensor nodes will actively report information to the server. The clients/control-panels subscribe to this 
+information. This makes the information flow a publish-subscribe pattern. Changes made by one component are 
+communicated via a central component, the server.
 
 Data send:
 - temperature
@@ -70,20 +69,28 @@ different types and special values used...
 Allowed message types:
 
 Data-message sent from sensors to control panel:
-- "'desired_node';temperature=## °C";humidity=## %"
+- Advertise sensor data "'desired_node';type=value unit""
+- Advertise Actuator state "desired_node, desired_actuator, on (true or false)"
 
 Command-message send from control panel to sensors/actuators:
-- We need to specify the nodeId, actuatorId and what state we want the actuator to be.
-- nodeId, actuatorId, isOn "on", "off"
+- Specify the nodeId, actuatorId and the desired actuator state ("on", "off").
+
+Data message sent from server to clients
+- If the server is finished sending over all the nodes the control panel a null is sent to mark the end.
 
 Type of marshalling used (fixed size, separators, TLV?)
 The type of marshalling used is separators. Commas and semicolons To separate message and individual fields 
 within a message.
 
 Which messages sent by which node?
-The data message are sent by the sensor nodes.
+The data message are sent by the sensor nodes. 
+The command messages are sent from the control panels.
 
 ## Error handling
+There is no handling of errors such as network outages, however there is used structured error handling. The try catch
+statement is an idea of enclosing a block of code (the 'try' block) that might generate exceptions and then specify a
+'catch' block handling those exceptions. This is commonly used in the development of the application There is also 
+simple if checks ensuring that the right input is inputted. 
 
 ## Realistic scenario
 A hypothetical scenario could start with someone somewhere opens/starts the control panel app and 
@@ -94,3 +101,4 @@ its whole lifespan, each node sending its information to the control panel, and 
 sending commands to the nodes.
 
 ## Security
+There are no security features implemented in the protocol yet.  
