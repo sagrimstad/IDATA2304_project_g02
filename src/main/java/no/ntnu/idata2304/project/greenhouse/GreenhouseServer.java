@@ -55,6 +55,7 @@ public class GreenhouseServer {
         if (clientHandler != null) {
           this.connectedClients.add(clientHandler);
           for (SensorActuatorNode node : this.nodes.values()) {
+            node.addActuatorListener(clientHandler);
             node.addSensorListener(clientHandler);
           }
           clientHandler.start();
