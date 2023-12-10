@@ -133,21 +133,6 @@ public class RealCommunicationChannel implements CommunicationChannel {
     return info;
   }
 
-  /**
-   * Advertise that a node is removed.
-   *
-   * @param nodeId ID of the removed node
-   */
-  public void advertiseRemovedNode(int nodeId, int delay) {
-    Timer timer = new Timer();
-    timer.schedule(new TimerTask() {
-      @Override
-      public void run() {
-        logic.onNodeRemoved(nodeId);
-      }
-    }, delay * 1000L);
-  }
-
   // TODO Change JavaDoc specifiation according to protocol
   /**
    * Advertise new sensor readings.

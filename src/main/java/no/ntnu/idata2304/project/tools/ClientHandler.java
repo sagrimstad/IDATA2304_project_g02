@@ -68,11 +68,6 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
     this.sendToClient("0");
   }
 
-  // private boolean isBroadcastMessage(Message response) {
-  //   return response instanceof StateMessage
-  //       || response instanceof CurrentChannelMessage;
-  // }
-
   /**
    * Read one message form the socket - from the client.
    *

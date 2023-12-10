@@ -98,30 +98,6 @@ public class GreenhouseServer {
   }
 
   /**
-   * Sends a specified message to all currently connected clients.
-   *
-   * @param message A specified message
-   */
-  public void sendResponseToAllClients(String message) {
-    for (ClientHandler clientHandler : this.connectedClients) {
-      clientHandler.sendToClient(message);
-    }
-  }
-
-  /**
-   * Sends a sensor reading to all connected clients.
-   *
-   * @param sensorId the ID of the sensor
-   * @param type     the type of sensor
-   * @param value    the sensors value
-   * @param unit     the specified unit of the value
-   */
-  public void sendSensorReadingToAllClients(int sensorId, String type, double value, String unit) {
-    String sensorReadingMessage = ":" + sensorId + ":" + type + ":" + value + ":" + unit;
-    sendResponseToAllClients(sensorReadingMessage);
-  }
-
-  /**
    * Removes a specified client handler for a client after the client has been disconnected.
    *
    * @param clientHandler A specified client handler
