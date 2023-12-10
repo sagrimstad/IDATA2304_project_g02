@@ -144,7 +144,7 @@ public class GreenhouseServer {
         this.listeningSocket.close();
       }
     } catch (IOException e) {
-      System.err.println("Error while stopping the server: " + e.getMessage());
+      Logger.error("Error while stopping the server: " + e.getMessage());
     }
   }
 }

@@ -112,10 +112,10 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
           default -> Logger.error("Error while changing state for actuator: " + actuator);
         }
       } else {
-        System.err.println("Incorrect command: " + command);
+        Logger.error("Incorrect command: " + command);
       }
     } catch (IOException e) {
-      System.err.println("Error while handling actuator change: " + e.getMessage());
+      Logger.error("Error while handling actuator change: " + e.getMessage());
     }
   }
 
@@ -172,7 +172,7 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
         this.socket.close();
       }
     } catch (IOException e) {
-      System.err.println("Error while closing sockets: " + e.getMessage());
+      Logger.error("Error while closing sockets: " + e.getMessage());
     }
   }
 
