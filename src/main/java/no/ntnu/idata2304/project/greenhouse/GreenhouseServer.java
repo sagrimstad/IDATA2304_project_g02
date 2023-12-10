@@ -55,6 +55,7 @@ public class GreenhouseServer {
         if (clientHandler != null) {
           this.connectedClients.add(clientHandler);
           for (SensorActuatorNode node : this.nodes.values()) {
+            node.addActuatorListener(clientHandler);
             node.addSensorListener(clientHandler);
           }
           clientHandler.start();
@@ -143,7 +144,7 @@ public class GreenhouseServer {
         this.listeningSocket.close();
       }
     } catch (IOException e) {
-      System.err.println("Error while stopping the server: " + e.getMessage());
+      Logger.error("Error while stopping the server: " + e.getMessage());
     }
   }
 }

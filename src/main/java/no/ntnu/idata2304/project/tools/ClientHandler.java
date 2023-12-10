@@ -47,26 +47,16 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
   @Override
   public void run() {
     this.initialize();
-    String receivedMessage;
+    String clientRequest;
     do {
-      receivedMessage = readClientRequest();
-      if (receivedMessage != null) {
-        String response;
-        do {
-          String clientRequest = this.readClientRequest();
-          if (clientRequest != null) {
-            Logger.info("Received " + clientRequest);
-            handleActuatorChangeCommand(receivedMessage);
-            response = "OK";
-            this.sendToClient(response);
-          } else {
-            response = null;
-          }
-        } while (response != null);
-        Logger.info("Client " + this.socket.getRemoteSocketAddress() + " leaving");
-        this.server.clientDisconnected(this);
+      clientRequest = this.readClientRequest();
+      if (clientRequest != null) {
+        Logger.info("Received " + clientRequest);
+        this.handleActuatorChangeCommand(clientRequest);
       }
-    } while (receivedMessage != null);
+    } while (clientRequest != null);
+    Logger.info("Client " + this.socket.getRemoteSocketAddress() + " leaving");
+    this.server.clientDisconnected(this);
   }
 
   /**
@@ -121,10 +111,10 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
           default -> Logger.error("Error while changing state for actuator: " + actuator);
         }
       } else {
-        System.err.println("Incorrect command: " + command);
+        Logger.error("Incorrect command: " + command);
       }
     } catch (IOException e) {
-      System.err.println("Error while handling actuator change: " + e.getMessage());
+      Logger.error("Error while handling actuator change: " + e.getMessage());
     }
   }
 
@@ -163,6 +153,13 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
   }
 
   /**
+   * Sends an actuator change to the client when the state of that actuator is changed.
+   */
+  private void sendActuatorChangeToClient(int nodeId, int actuatorId, boolean isOn) {
+    this.socketWriter.println(nodeId + ";" + actuatorId + ":" + isOn);
+  }
+
+  /**
    * Closes the socket connection along with associated input and output streams.
    * If any of the streams or the socket itself is already closed, it does nothing.
    */
@@ -178,7 +175,7 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
         this.socket.close();
       }
     } catch (IOException e) {
-      System.err.println("Error while closing sockets: " + e.getMessage());
+      Logger.error("Error while closing sockets: " + e.getMessage());
     }
   }
 
@@ -187,7 +184,9 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
    */
   @Override
   public void actuatorUpdated(int nodeId, Actuator actuator) {
-    //TODO: Send actuator state to control panel
+    int actuatorId = actuator.getId();
+    boolean on = actuator.isOn();
+    this.sendActuatorChangeToClient(nodeId, actuatorId, on);
   }
 
   /**
