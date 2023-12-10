@@ -9,7 +9,7 @@ public class Parser {
    * Not allowed to create instances of this class.
    */
   private Parser() {
-
+    // Intentionally left blank
   }
 
   /**
