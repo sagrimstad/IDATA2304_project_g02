@@ -47,18 +47,18 @@ public class RealCommunicationChannel implements CommunicationChannel {
       String serverCommand;
       do {
         serverCommand = this.socketReader.readLine();
-        if (!serverCommand.equals("0")) {
+        if (!serverCommand.equals(null)) {
           this.spawnNode(serverCommand, delay);
           delay++;
         }
-      } while (!serverCommand.equals("0"));
+      } while (!serverCommand.equals(null));
       do {
         serverCommand = this.socketReader.readLine();
-        if (!serverCommand.equals("0")) {
+        if (!serverCommand.equals(null)) {
           this.advertiseSensorData(serverCommand, delay);
           delay++;
         }
-      } while (!serverCommand.equals("0"));
+      } while (!serverCommand.equals(null));
     } catch (IOException e) {
       Logger.error("Could not receive command from server");
     }
@@ -69,15 +69,10 @@ public class RealCommunicationChannel implements CommunicationChannel {
       String serverCommand;
       do {
         serverCommand = this.socketReader.readLine();
-        Logger.info("Received " + serverCommand + " from server");
-        if (!serverCommand.equals("0")) {
-          try {
-            this.advertiseSensorData(serverCommand, delay);
-          } catch (IllegalArgumentException e) {
-            // Intentionally left blank
-          }
+        if (!serverCommand.equals(null)) {
+          this.advertiseSensorData(serverCommand, delay);
         }
-      } while (!serverCommand.equals("0"));
+      } while (!serverCommand.equals(null));
     } catch (IOException e) {
       Logger.error("Could not receive command from server");
     }
