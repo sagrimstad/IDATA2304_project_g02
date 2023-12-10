@@ -99,6 +99,7 @@ public class ControlPanelStarter {
   private void stopCommunication(CommunicationChannel channel) {
     RealCommunicationChannel realChannel = (RealCommunicationChannel) channel;
     realChannel.stopSensorReading();
+    realChannel.stopCommunicationChannel();
     // TODO - here you stop the TCP/UDP socket communication
   }
 }
