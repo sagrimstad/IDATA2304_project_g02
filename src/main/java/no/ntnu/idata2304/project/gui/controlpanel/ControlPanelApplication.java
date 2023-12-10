@@ -3,7 +3,6 @@ package no.ntnu.idata2304.project.gui.controlpanel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;

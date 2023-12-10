@@ -11,17 +11,13 @@ import no.ntnu.idata2304.project.tools.Logger;
 public class GreenhouseSimulator {
 
   private final Map<Integer, SensorActuatorNode> nodes = new HashMap<>();
-  private final boolean fake;
   private GreenhouseServer server;
 
   /**
    * Create a greenhouse simulator.
-   *
-   * @param fake When true, simulate a fake periodic events instead of creating socket
-   *             communication
    */
-  public GreenhouseSimulator(boolean fake) {
-    this.fake = fake;
+  public GreenhouseSimulator() {
+    // Intentionally left blank.
   }
 
   /**
@@ -52,7 +48,7 @@ public class GreenhouseSimulator {
   }
 
   private void initiateCommunication() {
-      initiateRealCommunication();
+    initiateRealCommunication();
   }
 
   /**
@@ -74,7 +70,7 @@ public class GreenhouseSimulator {
   }
 
   private void stopCommunication() {
-      this.server.stopServer();
+    this.server.stopServer();
   }
 
   /**

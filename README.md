@@ -8,4 +8,5 @@ To run the application:
 
 A logical visualization of what the communication between the server and the client/s look like:
 
-![img.jpg](src%2Fdoc%2Fimg.jpg)
+A visualization of how the communication could possibly look like:
+![visual_img.jpg](src%2Fdoc%2Fvisual_img.jpg)

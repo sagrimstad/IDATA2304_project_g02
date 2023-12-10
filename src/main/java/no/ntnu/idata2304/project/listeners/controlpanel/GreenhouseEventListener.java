@@ -1,7 +1,6 @@
 package no.ntnu.idata2304.project.listeners.controlpanel;
 
 import java.util.List;
-
 import no.ntnu.idata2304.project.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.idata2304.project.greenhouse.SensorReading;
 

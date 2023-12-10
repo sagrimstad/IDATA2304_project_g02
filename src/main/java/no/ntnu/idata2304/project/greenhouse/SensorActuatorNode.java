@@ -188,7 +188,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   }
 
   /**
-   * Retrieves the Actuator object assiciated with the specified actuator ID.
+   * Retrieves the Actuator object associated with the specified actuator ID.
    *
    * @param actuatorId the unique identifier of the actuator to retrieve.
    * @return the Actuator object associated with the specified actuator ID, or null if not found.
