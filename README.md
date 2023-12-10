@@ -1,10 +1,11 @@
 # Project in IDATA2304 Computer Communication and Network Programming
 
-To run the application:
-- Run either the CommandLineGreenhouse class, or the GreenhouseGuiStarter class.
-- Once the server is running, you can start the control panels by running ControlPanelStarter class.
-- -  More than one control panel can run at the same time. To run multiple clients, simply run as 
-many instances of the control panel as wanted.
+The project of the IDATA2304 Computer Communicaiton and Network Programming course by group 2.
 
-A visualization of how the communication could possibly look like:
+To run the application:
+1. To run the server, run the GreenhouseStarter class.
+2. To run the client/s, run the ControlPanelStarter class for each client.
+
+A logical visualization of what the communication between the server and the client/s look like:
+
 ![img.jpg](src%2Fdoc%2Fimg.jpg)

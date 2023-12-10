@@ -22,7 +22,7 @@
         <javafx.version>21-ea+23</javafx.version>
         <junit.jupiter.version>5.10.0-M1</junit.jupiter.version>
 
-        <application.main>no.ntnu.idata2304.project.run.ControlPanelStarter</application.main>
+        <application.main>no.ntnu.idata2304.project.run.GreenhouseStarter</application.main>
     </properties>
 
     <build>
