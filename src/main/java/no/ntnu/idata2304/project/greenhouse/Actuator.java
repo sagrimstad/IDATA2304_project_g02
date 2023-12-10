@@ -91,14 +91,6 @@ public class Actuator {
     return a;
   }
 
-  /**
-   * Toggle the actuator - if it was off, now it will be ON, and vice versa.
-   */
-  public void toggle() {
-    this.on = !this.on;
-    notifyChanges();
-  }
-
   private void notifyChanges() {
     if (listener != null) {
       listener.actuatorUpdated(this.nodeId, this);
@@ -170,18 +162,5 @@ public class Actuator {
 
   public int getNodeId() {
     return nodeId;
-  }
-
-  /**
-   * Set the actuator to the desired state.
-   *
-   * @param on Turn on when true, turn off when false
-   */
-  public void set(boolean on) {
-    if (on) {
-      turnOn();
-    } else {
-      turnOff();
-    }
   }
 }

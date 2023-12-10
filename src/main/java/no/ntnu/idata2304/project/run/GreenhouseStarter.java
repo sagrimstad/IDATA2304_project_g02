@@ -6,7 +6,7 @@ import no.ntnu.idata2304.project.tools.Logger;
 /**
  * Run a greenhouse simulation using command-line interface (no GUI).
  */
-public class CommandLineGreenhouse {
+public class GreenhouseStarter {
 
   /**
    * Application entrypoint for the command-line version of the simulator.

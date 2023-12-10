@@ -144,15 +144,6 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     }
   }
 
-  /**
-   * Check whether the node is currently running.
-   *
-   * @return True if it is in a running-state, false otherwise
-   */
-  public boolean isRunning() {
-    return running;
-  }
-
   private void startPeriodicSensorReading() {
     sensorReadingTimer = new Timer();
     TimerTask newSensorValueTask = new TimerTask() {
@@ -194,20 +185,6 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     Logger.infoNoNewline(" :");
     actuators.debugPrint();
     Logger.info("");
-  }
-
-  /**
-   * Toggle an actuator attached to this device.
-   *
-   * @param actuatorId The ID of the actuator to toggle
-   * @throws IllegalArgumentException If no actuator with given configuration is found on this node
-   */
-  public void toggleActuator(int actuatorId) {
-    Actuator actuator = getActuator(actuatorId);
-    if (actuator == null) {
-      throw new IllegalArgumentException("actuator[" + actuatorId + "] not found on node " + id);
-    }
-    actuator.toggle();
   }
 
   /**
@@ -303,29 +280,5 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   public void onCommunicationChannelClosed() {
     Logger.info("Communication channel closed for node " + id);
     stop();
-  }
-
-  /**
-   * Set an actuator to a desired state.
-   *
-   * @param actuatorId ID of the actuator to set.
-   * @param on         Whether it should be on (true) or off (false)
-   */
-  public void setActuator(int actuatorId, boolean on) {
-    Actuator actuator = getActuator(actuatorId);
-    if (actuator != null) {
-      actuator.set(on);
-    }
-  }
-
-  /**
-   * Set all actuators to desired state.
-   *
-   * @param on Whether the actuators should be on (true) or off (false)
-   */
-  public void setAllActuators(boolean on) {
-    for (Actuator actuator : actuators) {
-      actuator.set(on);
-    }
   }
 }

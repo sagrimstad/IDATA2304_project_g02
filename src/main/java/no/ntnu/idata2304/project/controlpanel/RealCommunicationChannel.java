@@ -103,8 +103,8 @@ public class RealCommunicationChannel implements CommunicationChannel {
    * Spawn a new sensor/actuator node information after a given delay.
    *
    * @param specification A (temporary) manual configuration of the node in the following format
-   *                      [nodeId] semicolon [actuator_count_1] underscore [actuator_type_1] space
-   *                      ... space [actuator_count_M] underscore [actuator_type_M]
+   *                      [nodeId] semicolon [actuator_id] underscore [actuator_type_1] space
+   *                      ... space [actuator_id_M] underscore [actuator_type_M]
    */
   private void spawnNode(String specification, int delay) {
     SensorActuatorNodeInfo nodeInfo = this.createSensorNodeInfoFrom(specification);
@@ -133,22 +133,6 @@ public class RealCommunicationChannel implements CommunicationChannel {
     return info;
   }
 
-  /**
-   * Advertise that a node is removed.
-   *
-   * @param nodeId ID of the removed node
-   */
-  public void advertiseRemovedNode(int nodeId, int delay) {
-    Timer timer = new Timer();
-    timer.schedule(new TimerTask() {
-      @Override
-      public void run() {
-        logic.onNodeRemoved(nodeId);
-      }
-    }, delay * 1000L);
-  }
-
-  // TODO Change JavaDoc specifiation according to protocol
   /**
    * Advertise new sensor readings.
    *
