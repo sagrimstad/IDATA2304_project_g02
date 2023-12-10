@@ -14,28 +14,31 @@ import no.ntnu.idata2304.project.greenhouse.SensorReading;
 /**
  * The NodeParser class represents a tool that parses different strings into actuator and sensor
  * information that can be used by a control panel.
- * 
- * @author  Group 2
+ *
+ * @author Group 2
  * @version v1.0 (2023.12.04)
  */
 public class NodeParser {
+
   /**
    * Constructs an instance of the NodeParser class.
-   * 
+   *
    * <p>This class is not supposed to be instantiated.</p>
    */
   private NodeParser() {
     // Intentionally left blank
   }
 
-  public static void parseActuators(String actuatorSpecification, SensorActuatorNodeInfo info, ControlPanelLogic logic) {
+  public static void parseActuators(String actuatorSpecification, SensorActuatorNodeInfo info,
+      ControlPanelLogic logic) {
     String[] parts = actuatorSpecification.split(" ");
     for (String part : parts) {
       parseActuatorInfo(part, info, logic);
     }
   }
 
-  private static void parseActuatorInfo(String s, SensorActuatorNodeInfo info, ControlPanelLogic logic) {
+  private static void parseActuatorInfo(String s, SensorActuatorNodeInfo info,
+      ControlPanelLogic logic) {
     String[] actuatorInfo = s.split("_");
     if (actuatorInfo.length != 2) {
       throw new IllegalArgumentException("Invalid actuator info format: " + s);
@@ -43,9 +46,9 @@ public class NodeParser {
     int actuatorId = parseIntegerOrError(actuatorInfo[0],
         "Invalid actuator count: " + actuatorInfo[0]);
     String actuatorType = actuatorInfo[1];
-      Actuator actuator = new Actuator(actuatorId, actuatorType, info.getId());
-      actuator.setListener(logic);
-      info.addActuator(actuator);
+    Actuator actuator = new Actuator(actuatorId, actuatorType, info.getId());
+    actuator.setListener(logic);
+    info.addActuator(actuator);
   }
 
   public static List<SensorReading> parseSensors(String sensorInfo) {

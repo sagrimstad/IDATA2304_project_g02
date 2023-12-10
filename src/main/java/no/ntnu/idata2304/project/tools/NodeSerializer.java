@@ -10,8 +10,8 @@ import no.ntnu.idata2304.project.greenhouse.SensorActuatorNode;
 
 /**
  * The NodeSerializer class represents a tool that serializes nodes to a lists of strings.
- * 
- * @author  Group 2
+ *
+ * @author Group 2
  * @version v2.0 (2023.12.07)
  */
 public class NodeSerializer {
@@ -28,13 +28,13 @@ public class NodeSerializer {
   /**
    * Returns a list of strings containing all nodes along with their actuators on a string format
    * serialized from a specified map of nodes.
-   * 
+   *
    * <p>It is possible for a node to have no actuators. In this case, only the id of the node is
    * used.</p>
-   * 
+   *
    * @param nodes A specified map of nodes
    * @return A list of strings containing all nodes along with their actuators on a string format
-   *         serialized from a specified map of nodes
+   * serialized from a specified map of nodes
    */
   public static List<String> toString(Map<Integer, SensorActuatorNode> nodes) {
     List<String> list = new ArrayList<>();
@@ -61,10 +61,10 @@ public class NodeSerializer {
   /**
    * Returns a list of strings containing all sensors for each node on a string format serialized
    * from a specified map of nodes.
-   * 
+   *
    * @param nodes A specified map of nodes
    * @return A list of strings containing all sensors for each node on a string format serialized
-   *         from a specified map of nodes
+   * from a specified map of nodes
    */
   public static List<String> toSensorString(Map<Integer, SensorActuatorNode> nodes) {
     List<String> list = new ArrayList<>();
@@ -76,7 +76,7 @@ public class NodeSerializer {
         int count = 0;
         for (Sensor sensor : sensors) {
           String n = "," + sensor.getType() + "=" + sensor.getReading().getValue() + " " +
-                     sensor.getReading().getUnit();
+              sensor.getReading().getUnit();
           if (count < 1) {
             n = n.substring(1, n.length());
             count++;

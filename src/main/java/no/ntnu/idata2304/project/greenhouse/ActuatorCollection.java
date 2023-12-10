@@ -43,7 +43,7 @@ public class ActuatorCollection implements Iterable<Actuator> {
 
   /**
    * Returns all actuators.
-   * 
+   *
    * @return All actuators
    */
   public Map<Integer, Actuator> getAll() {

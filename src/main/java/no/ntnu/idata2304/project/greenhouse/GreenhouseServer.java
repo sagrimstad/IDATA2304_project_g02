@@ -13,13 +13,13 @@ import no.ntnu.idata2304.project.tools.Logger;
 /**
  * Handles the TCP server socket/s.
  *
- * @author  Group 2
+ * @author Group 2
  * @version v1.0 (2023.11.25)
  */
 public class GreenhouseServer {
 
   private final Map<Integer, SensorActuatorNode> nodes;
-  
+
   public static final int PORT_NUMBER = 1337;
   boolean isServerRunning;
   private final List<ClientHandler> connectedClients = new ArrayList<>();
@@ -35,7 +35,7 @@ public class GreenhouseServer {
 
   /**
    * Returns the nodes created in the simulator.
-   * 
+   *
    * @return The nodes created in the simulator
    */
   public Map<Integer, SensorActuatorNode> getNodes() {
@@ -111,9 +111,9 @@ public class GreenhouseServer {
    * Sends a sensor reading to all connected clients.
    *
    * @param sensorId the ID of the sensor
-   * @param type the type of sensor
-   * @param value the sensors value
-   * @param unit the specified unit of the value
+   * @param type     the type of sensor
+   * @param value    the sensors value
+   * @param unit     the specified unit of the value
    */
   public void sendSensorReadingToAllClients(int sensorId, String type, double value, String unit) {
     String sensorReadingMessage = ":" + sensorId + ":" + type + ":" + value + ":" + unit;

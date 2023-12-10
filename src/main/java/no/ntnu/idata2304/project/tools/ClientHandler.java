@@ -141,7 +141,7 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
   /**
    * Sends all nodes along with their actuators serialized from a specified map of nodes to the
    * client.
-   * 
+   *
    * @param nodes A specified map of nodes
    */
   private void sendNodesToClient(Map<Integer, SensorActuatorNode> nodes) {
@@ -153,7 +153,7 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
 
   /**
    * Sends all sensors for each node serialized from a specified map of nodes to the client.
-   * 
+   *
    * @param nodes A specified map of nodes
    */
   private void sendSensorsToClient(Map<Integer, SensorActuatorNode> nodes) {
