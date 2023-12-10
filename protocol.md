@@ -74,7 +74,7 @@ Data-message sent from sensors to control panel:
 
 Command-message send from control panel to sensors/actuators:
 - We need to specify the nodeId, actuatorId and what state we want the actuator to be.
-- nodeId, actuatorId, isOn "ON", "off"
+- nodeId, actuatorId, isOn "on", "off"
 
 Type of marshalling used (fixed size, separators, TLV?)
 The type of marshalling used is separators. Commas and semicolons To separate message and individual fields 
