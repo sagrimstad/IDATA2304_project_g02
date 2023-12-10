@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import no.ntnu.idata2304.project.greenhouse.Actuator;
 import no.ntnu.idata2304.project.greenhouse.GreenhouseServer;
 import no.ntnu.idata2304.project.greenhouse.SensorActuatorNode;
@@ -163,6 +162,10 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
     }
   }
 
+  /**
+   * Closes the socket connection along with associated input and output streams.
+   * If any of the streams or the socket itself is already closed, it does nothing.
+   */
   public void close() {
     try {
       if (this.socketWriter != null) {
@@ -179,11 +182,17 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
     }
   }
 
+  /**
+   * Notifies the control panel that the state of an actuator has been updated.
+   */
   @Override
   public void actuatorUpdated(int nodeId, Actuator actuator) {
     //TODO: Send actuator state to control panel
   }
 
+  /**
+   * Notifies that the sensors associated with a specific node have been updated.
+   */
   @Override
   public void sensorsUpdated(SensorActuatorNode node) {
     Map<Integer, SensorActuatorNode> nodes = new HashMap<>();

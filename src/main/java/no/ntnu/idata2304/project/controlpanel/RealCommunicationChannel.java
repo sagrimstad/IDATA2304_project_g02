@@ -11,7 +11,6 @@ import java.net.Socket;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import no.ntnu.idata2304.project.greenhouse.SensorReading;
 import no.ntnu.idata2304.project.tools.Logger;
 import no.ntnu.idata2304.project.tools.NodeParser;
@@ -185,11 +184,25 @@ public class RealCommunicationChannel implements CommunicationChannel {
     }, delay * 1000L);
   }
 
+  /**
+   * Sends a notification of an actuator change to the
+   * connected device through the communication socket.
+   *
+   * @param nodeId     ID of the node to which the actuator is attached
+   * @param actuatorId Node-wide unique ID of the actuator
+   * @param isOn       When true, actuator must be turned on; off when false.
+   */
   @Override
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
     this.socketWriter.println(nodeId + ";" + actuatorId + ":" + isOn);
   }
 
+  /**
+   * Opens a communication channel by establishing a socket
+   * connection to the specified host and port.
+   *
+   * @return true if the communication channel is successfully opened, false otherwise.
+   */
   @Override
   public boolean open() {
     boolean success = false;

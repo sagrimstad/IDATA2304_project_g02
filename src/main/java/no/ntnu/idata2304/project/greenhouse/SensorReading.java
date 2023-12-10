@@ -24,18 +24,38 @@ public class SensorReading {
     this.unit = unit;
   }
 
+  /**
+   * Return the type of the sensor reading.
+   *
+   * @return the type of the sensor reading.
+   */
   public String getType() {
     return type;
   }
 
+  /**
+   * Return the value of the sensor reading.
+   *
+   * @return the value of the sensor reading.
+   */
   public double getValue() {
     return value;
   }
 
+  /**
+   * Return the unit of the sensor reading.
+   *
+   * @return the unit of the sensor reading.
+   */
   public String getUnit() {
     return unit;
   }
 
+  /**
+   * Set value of the sensor reading.
+   *
+   * @param newValue the new value
+   */
   public void setValue(double newValue) {
     this.value = newValue;
   }

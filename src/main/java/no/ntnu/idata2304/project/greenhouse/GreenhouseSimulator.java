@@ -66,6 +66,9 @@ public class GreenhouseSimulator {
     }
   }
 
+  /**
+   * Initiates real communication by creating and starting a GreenhouseServer instance.
+   */
   private void initiateRealCommunication() {
     // TODO - here you can set up the TCP or UDP communication
     this.server = new GreenhouseServer(this.nodes);

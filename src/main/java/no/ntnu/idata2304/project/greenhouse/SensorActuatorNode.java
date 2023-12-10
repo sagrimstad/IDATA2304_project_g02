@@ -210,6 +210,12 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     actuator.toggle();
   }
 
+  /**
+   * Retrieves the Actuator object assiciated with the specified actuator ID.
+   *
+   * @param actuatorId the unique identifier of the actuator to retrieve.
+   * @return the Actuator object associated with the specified actuator ID, or null if not found.
+   */
   public Actuator getActuator(int actuatorId) {
     return actuators.get(actuatorId);
   }
@@ -220,6 +226,12 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     }
   }
 
+  /**
+   * Updates the state of the specified actuator associated with a node and notifies listeners.
+   *
+   * @param nodeId   ID of the node on which this actuator is placed
+   * @param actuator The actuator that has changed its state
+   */
   @Override
   public void actuatorUpdated(int nodeId, Actuator actuator) {
     actuator.applyImpact(this);
@@ -284,6 +296,9 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     return actuators;
   }
 
+  /**
+   * Callback method triggered when the communication channel is closed for the node.
+   */
   @Override
   public void onCommunicationChannelClosed() {
     Logger.info("Communication channel closed for node " + id);

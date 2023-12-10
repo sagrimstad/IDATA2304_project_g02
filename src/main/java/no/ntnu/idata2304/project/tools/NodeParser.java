@@ -5,7 +5,6 @@ import static no.ntnu.idata2304.project.tools.Parser.parseIntegerOrError;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import no.ntnu.idata2304.project.controlpanel.ControlPanelLogic;
 import no.ntnu.idata2304.project.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.idata2304.project.greenhouse.Actuator;
@@ -29,6 +28,18 @@ public class NodeParser {
     // Intentionally left blank
   }
 
+  /**
+   * Parses the actuator specification string and updates the provided
+   * {@code SensorActuatorNodeInfo} with the parsed actuator information
+   * using the given {@code ControlPanelLogic}.
+   *
+   * @param actuatorSpecification a string containing actuator specifications
+   *                              where each part is separated by a space.
+   * @param info the {@code SensorActuatorNodeInfo} to be updated with the
+   *             parsed actuator information.
+   * @param logic the {@code ControlPanelLogic} used to apply the parsed
+   *              actuator information to the node.
+   */
   public static void parseActuators(String actuatorSpecification, SensorActuatorNodeInfo info,
       ControlPanelLogic logic) {
     String[] parts = actuatorSpecification.split(" ");
@@ -51,6 +62,13 @@ public class NodeParser {
     info.addActuator(actuator);
   }
 
+  /**
+   * Parses the sensor information string and returns a list of {@code SensorReading} objects.
+   *
+   * @param sensorInfo a string containing sensor information where each
+   *                   reading is separated by a comma.
+   * @return a list of {@code SensorReading} objects parsed from the input string.
+   */
   public static List<SensorReading> parseSensors(String sensorInfo) {
     List<SensorReading> readings = new LinkedList<>();
     String[] readingInfo = sensorInfo.split(",");
