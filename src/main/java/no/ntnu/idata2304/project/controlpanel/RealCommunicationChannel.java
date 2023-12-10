@@ -224,4 +224,20 @@ public class RealCommunicationChannel implements CommunicationChannel {
     }
     return success;
   }
+
+  /**
+   * Stops the communication channel.
+   */
+  public void stopCommunicationChannel() {
+    if (this.socket != null) {
+      try {
+        this.socket.close();
+        this.socket = null;
+        this.socketReader = null;
+        this.socketWriter = null;
+      } catch (IOException e) {
+        Logger.error("Could not close the socket: " + e.getMessage());
+      }
+    }
+  }
 }
