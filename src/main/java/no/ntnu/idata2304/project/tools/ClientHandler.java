@@ -48,26 +48,16 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
   @Override
   public void run() {
     this.initialize();
-    String receivedMessage;
+    String clientRequest;
     do {
-      receivedMessage = readClientRequest();
-      if (receivedMessage != null) {
-        String response;
-        do {
-          String clientRequest = this.readClientRequest();
-          if (clientRequest != null) {
-            Logger.info("Received " + clientRequest);
-            handleActuatorChangeCommand(receivedMessage);
-            response = "OK";
-            this.sendToClient(response);
-          } else {
-            response = null;
-          }
-        } while (response != null);
-        Logger.info("Client " + this.socket.getRemoteSocketAddress() + " leaving");
-        this.server.clientDisconnected(this);
+      clientRequest = this.readClientRequest();
+      if (clientRequest != null) {
+        Logger.info("Received " + clientRequest);
+        this.handleActuatorChangeCommand(clientRequest);
       }
-    } while (receivedMessage != null);
+    } while (clientRequest != null);
+    Logger.info("Client " + this.socket.getRemoteSocketAddress() + " leaving");
+    this.server.clientDisconnected(this);
   }
 
   /**
