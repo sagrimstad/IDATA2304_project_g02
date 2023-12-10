@@ -186,7 +186,11 @@ public class RealCommunicationChannel implements CommunicationChannel {
    */
   @Override
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
-    this.socketWriter.println(nodeId + ";" + actuatorId + ":" + isOn);
+    try {
+      this.socketWriter.println(nodeId + ";" + actuatorId + ":" + isOn);
+    } catch (NullPointerException e) {
+      Logger.error("Could not send over the socket at this time");
+    }
   }
 
   /**
