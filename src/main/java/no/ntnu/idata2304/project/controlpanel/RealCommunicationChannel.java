@@ -25,6 +25,7 @@ public class RealCommunicationChannel implements CommunicationChannel {
   private Socket socket;
   private PrintWriter socketWriter;
   private BufferedReader socketReader;
+  private boolean read;
   private int delay;
 
   /**
@@ -34,13 +35,14 @@ public class RealCommunicationChannel implements CommunicationChannel {
    */
   public RealCommunicationChannel(ControlPanelLogic logic) {
     this.logic = logic;
+    this.read = true;
     this.delay = 2;
   }
 
   /**
-   * Starts the communication channel by receiving commands from the server, first telling the
-   * control panel what nodes along with actuators to spawn, then what sensors to advertise to each
-   * node.
+   * Starts the communication channel by receiving commands from the server, telling the control
+   * panel what nodes along with actuators to spawn, and then telling the channel to start reading
+   * sensor updates from the server.
    */
   public void start() {
     try {
@@ -48,34 +50,46 @@ public class RealCommunicationChannel implements CommunicationChannel {
       do {
         serverCommand = this.socketReader.readLine();
         if (!serverCommand.equals("0")) {
-          this.spawnNode(serverCommand, delay);
-          delay++;
+          this.spawnNode(serverCommand, this.delay);
+          this.delay++;
         }
       } while (!serverCommand.equals("0"));
-      do {
-        serverCommand = this.socketReader.readLine();
-        if (!serverCommand.equals("0")) {
-          this.advertiseSensorData(serverCommand, delay);
-          delay++;
+      Timer timer = new Timer();
+      timer.schedule(new TimerTask() {
+        @Override
+        public void run() {
+          startSensorReading();
         }
-      } while (!serverCommand.equals("0"));
+      }, this.delay * 1000L);
     } catch (IOException e) {
       Logger.error("Could not receive command from server");
     }
   }
 
-  public void run() {
+  /**
+   * Starts the reading of sensor updates from the server.
+   */
+  public void startSensorReading() {
     try {
       String serverCommand;
-      do {
+      while (this.read) {
         serverCommand = this.socketReader.readLine();
-        if (!serverCommand.equals("0")) {
-          this.advertiseSensorData(serverCommand, delay);
+        try {
+          this.advertiseSensorData(serverCommand, this.delay);
+        } catch (IllegalArgumentException e) {
+          Logger.error("Invalid sensor reading, continuing to read...");
         }
-      } while (!serverCommand.equals("0"));
+      }
     } catch (IOException e) {
       Logger.error("Could not receive command from server");
     }
+  }
+
+  /**
+   * Stops the reading of sensor updates from the server.
+   */
+  public void stopSensorReading() {
+    this.read = false;
   }
 
   /**

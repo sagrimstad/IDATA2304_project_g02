@@ -71,16 +71,11 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
   }
 
   /**
-   * Initializes the client by serializing all nodes along with their actuators and sensors to
-   * strings and sending them to the client.
-   *
-   * <p>The nodes with actuators are serialized and sent before the sensors, since the nodes are
-   * created regardless of the actuators in the first step.</p>
+   * Initializes the client by serializing all nodes along with their actuators to strings and
+   * sending them to the client.
    */
   private void initialize() {
     this.sendNodesToClient(this.server.getNodes());
-    this.sendToClient("0");
-    this.sendSensorsToClient(this.server.getNodes());
     this.sendToClient("0");
   }
 
@@ -144,6 +139,12 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
     this.socketWriter.println(message);
   }
 
+  /**
+   * Sends all nodes along with their actuators serialized from a specified map of nodes to the
+   * client.
+   * 
+   * @param nodes A specified map of nodes
+   */
   private void sendNodesToClient(Map<Integer, SensorActuatorNode> nodes) {
     List<String> nodeStrings = NodeSerializer.toString(nodes);
     for (String nodeString : nodeStrings) {
@@ -151,12 +152,15 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
     }
   }
 
+  /**
+   * Sends all sensors for each node serialized from a specified map of nodes to the client.
+   * 
+   * @param nodes A specified map of nodes
+   */
   private void sendSensorsToClient(Map<Integer, SensorActuatorNode> nodes) {
     List<String> sensorStrings = NodeSerializer.toSensorString(nodes);
-    if (!sensorStrings.isEmpty()) {
-      for (String sensorString : sensorStrings) {
-        this.sendToClient(sensorString);
-      }
+    for (String sensorString : sensorStrings) {
+      this.sendToClient(sensorString);
     }
   }
 
