@@ -1,12 +1,10 @@
 package no.ntnu.idata2304.project.gui.greenhouse;
 
-import java.util.List;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import no.ntnu.idata2304.project.greenhouse.Actuator;
-import no.ntnu.idata2304.project.greenhouse.Sensor;
 import no.ntnu.idata2304.project.greenhouse.SensorActuatorNode;
 import no.ntnu.idata2304.project.gui.common.ActuatorPane;
 import no.ntnu.idata2304.project.gui.common.SensorPane;
@@ -67,9 +65,9 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
 
 
   @Override
-  public void sensorsUpdated(List<Sensor> sensors) {
+  public void sensorsUpdated(SensorActuatorNode node) {
     if (sensorPane != null) {
-      sensorPane.update(sensors);
+      sensorPane.update(node.getSensors());
     }
   }
 

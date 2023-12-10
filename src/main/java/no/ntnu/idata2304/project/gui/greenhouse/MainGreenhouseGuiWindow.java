@@ -61,5 +61,4 @@ public class MainGreenhouseGuiWindow extends Scene {
     }
     return node;
   }
-
 }

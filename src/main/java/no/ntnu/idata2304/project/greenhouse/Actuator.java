@@ -10,7 +10,7 @@ import no.ntnu.idata2304.project.listeners.common.ActuatorListener;
  */
 public class Actuator {
 
-  private static int nextId = 1;
+  private static int nextId = 0;
   private final String type;
   private final int nodeId;
   private final int id;
@@ -91,14 +91,6 @@ public class Actuator {
     return a;
   }
 
-  /**
-   * Toggle the actuator - if it was off, not it will be ON, and vice versa.
-   */
-  public void toggle() {
-    this.on = !this.on;
-    notifyChanges();
-  }
-
   private void notifyChanges() {
     if (listener != null) {
       listener.actuatorUpdated(this.nodeId, this);
@@ -162,7 +154,7 @@ public class Actuator {
    * Get the ID of the actuator.
    *
    * @return An ID which is guaranteed to be unique at a node level, not necessarily unique at the
-   * whole greenhouse-network level.
+   *         whole greenhouse-network level.
    */
   public int getId() {
     return id;
@@ -170,18 +162,5 @@ public class Actuator {
 
   public int getNodeId() {
     return nodeId;
-  }
-
-  /**
-   * Set the actuator to the desired state.
-   *
-   * @param on Turn on when true, turn off when false
-   */
-  public void set(boolean on) {
-    if (on) {
-      turnOn();
-    } else {
-      turnOff();
-    }
   }
 }

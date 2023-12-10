@@ -1,26 +1,27 @@
 package no.ntnu.idata2304.project.run;
 
-import no.ntnu.idata2304.project.gui.greenhouse.GreenhouseApplication;
+import no.ntnu.idata2304.project.greenhouse.GreenhouseSimulator;
 import no.ntnu.idata2304.project.tools.Logger;
 
 /**
- * Starter for GUI version of the greenhouse simulator.
+ * Run a greenhouse simulation using command-line interface (no GUI).
  */
-public class GreenhouseGuiStarter {
+public class GreenhouseStarter {
 
   /**
-   * Entrypoint gor the Greenhouse GUI application.
+   * Application entrypoint for the command-line version of the simulator.
    *
    * @param args Command line arguments, only the first one of them used: when it is "fake", emulate
    *             fake events, when it is either something else or not present, use real socket
    *             communication.
    */
   public static void main(String[] args) {
-    boolean fake = false;
+    Logger.info("Running greenhouse simulator in command line (without GUI)...");
     if (args.length == 1 && "fake".equals(args[0])) {
-      fake = true;
       Logger.info("Using FAKE events");
     }
-    GreenhouseApplication.startApp(fake);
+    GreenhouseSimulator simulator = new GreenhouseSimulator();
+    simulator.initialize();
+    simulator.start();
   }
 }

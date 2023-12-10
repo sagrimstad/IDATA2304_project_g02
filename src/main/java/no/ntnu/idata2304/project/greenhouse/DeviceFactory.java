@@ -146,5 +146,4 @@ public class DeviceFactory {
   private static int generateUniqueNodeId() {
     return nextNodeId++;
   }
-
 }

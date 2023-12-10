@@ -19,7 +19,6 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   // How often to generate new sensor values, in seconds.
   private static final long SENSING_DELAY = 5000;
   private final int id;
-
   private final List<Sensor> sensors = new LinkedList<>();
   private final ActuatorCollection actuators = new ActuatorCollection();
 
@@ -145,15 +144,6 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     }
   }
 
-  /**
-   * Check whether the node is currently running.
-   *
-   * @return True if it is in a running-state, false otherwise
-   */
-  public boolean isRunning() {
-    return running;
-  }
-
   private void startPeriodicSensorReading() {
     sensorReadingTimer = new Timer();
     TimerTask newSensorValueTask = new TimerTask() {
@@ -198,29 +188,27 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   }
 
   /**
-   * Toggle an actuator attached to this device.
+   * Retrieves the Actuator object associated with the specified actuator ID.
    *
-   * @param actuatorId The ID of the actuator to toggle
-   * @throws IllegalArgumentException If no actuator with given configuration is found on this node
+   * @param actuatorId the unique identifier of the actuator to retrieve.
+   * @return the Actuator object associated with the specified actuator ID, or null if not found.
    */
-  public void toggleActuator(int actuatorId) {
-    Actuator actuator = getActuator(actuatorId);
-    if (actuator == null) {
-      throw new IllegalArgumentException("actuator[" + actuatorId + "] not found on node " + id);
-    }
-    actuator.toggle();
-  }
-
-  private Actuator getActuator(int actuatorId) {
+  public Actuator getActuator(int actuatorId) {
     return actuators.get(actuatorId);
   }
 
   private void notifySensorChanges() {
     for (SensorListener listener : sensorListeners) {
-      listener.sensorsUpdated(sensors);
+      listener.sensorsUpdated(this);
     }
   }
 
+  /**
+   * Updates the state of the specified actuator associated with a node and notifies listeners.
+   *
+   * @param nodeId   ID of the node on which this actuator is placed
+   * @param actuator The actuator that has changed its state
+   */
   @Override
   public void actuatorUpdated(int nodeId, Actuator actuator) {
     actuator.applyImpact(this);
@@ -228,7 +216,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   }
 
   private void notifyActuatorChange(Actuator actuator) {
-    String onOff = actuator.isOn() ? "ON" : "off";
+    String onOff = actuator.isOn() ? "on" : "off";
     Logger.info(" => " + actuator.getType() + " on node " + id + " " + onOff);
     for (ActuatorListener listener : actuatorListeners) {
       listener.actuatorUpdated(id, actuator);
@@ -285,33 +273,12 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     return actuators;
   }
 
+  /**
+   * Callback method triggered when the communication channel is closed for the node.
+   */
   @Override
   public void onCommunicationChannelClosed() {
     Logger.info("Communication channel closed for node " + id);
     stop();
-  }
-
-  /**
-   * Set an actuator to a desired state.
-   *
-   * @param actuatorId ID of the actuator to set.
-   * @param on         Whether it should be on (true) or off (false)
-   */
-  public void setActuator(int actuatorId, boolean on) {
-    Actuator actuator = getActuator(actuatorId);
-    if (actuator != null) {
-      actuator.set(on);
-    }
-  }
-
-  /**
-   * Set all actuators to desired state.
-   *
-   * @param on Whether the actuators should be on (true) or off (false)
-   */
-  public void setAllActuators(boolean on) {
-    for (Actuator actuator : actuators) {
-      actuator.set(on);
-    }
   }
 }

@@ -60,7 +60,7 @@ public class SensorPane extends TitledPane {
    * @param sensors The sensor data that has been updated
    */
   public void update(Iterable<SensorReading> sensors) {
-    int index = 0;
+    int index = 1;
     for (SensorReading sensor : sensors) {
       updateSensorLabel(sensor, index++);
     }

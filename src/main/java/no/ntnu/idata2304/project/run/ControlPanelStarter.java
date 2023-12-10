@@ -1,9 +1,8 @@
 package no.ntnu.idata2304.project.run;
 
-import no.ntnu.idata2304.project.CommunicationChannel;
+import no.ntnu.idata2304.project.controlpanel.CommunicationChannel;
 import no.ntnu.idata2304.project.controlpanel.ControlPanelLogic;
-import no.ntnu.idata2304.project.controlpanel.FakeCommunicationChannel;
-import no.ntnu.idata2304.project.controlpanel.ControlPanelCommunicationChannel;
+import no.ntnu.idata2304.project.controlpanel.RealCommunicationChannel;
 import no.ntnu.idata2304.project.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.idata2304.project.tools.Logger;
 
@@ -13,10 +12,7 @@ import no.ntnu.idata2304.project.tools.Logger;
  */
 public class ControlPanelStarter {
 
-  private final boolean fake;
-
-  public ControlPanelStarter(boolean fake) {
-    this.fake = fake;
+  public ControlPanelStarter() {
   }
 
   /**
@@ -27,86 +23,42 @@ public class ControlPanelStarter {
    *             communication.
    */
   public static void main(String[] args) {
-    boolean fake = false;
     if (args.length == 1 && "fake".equals(args[0])) {
-      fake = true;
       Logger.info("Using FAKE events");
     }
-    ControlPanelStarter starter = new ControlPanelStarter(fake);
+    ControlPanelStarter starter = new ControlPanelStarter();
     starter.start();
   }
 
   private void start() {
     ControlPanelLogic logic = new ControlPanelLogic();
-    CommunicationChannel channel = initiateCommunication(logic, fake);
+    CommunicationChannel channel = initiateCommunication(logic);
     ControlPanelApplication.startApp(logic, channel);
     // This code is reached only after the GUI-window is closed
     Logger.info("Exiting the control panel application");
-    stopCommunication();
+    stopCommunication(channel);
   }
 
-  private CommunicationChannel initiateCommunication(ControlPanelLogic logic, boolean fake) {
+  private CommunicationChannel initiateCommunication(ControlPanelLogic logic) {
     CommunicationChannel channel;
-    if (fake) {
-      channel = initiateFakeSpawner(logic);
-    } else {
-      channel = initiateSocketCommunication(logic);
-    }
+    channel = initiateSocketCommunication(logic);
     return channel;
   }
 
   private CommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
-    ControlPanelCommunicationChannel spawner = new ControlPanelCommunicationChannel();
-    logic.setCommunicationChannel(spawner);
-    if (spawner.open()) {
-      spawner.sendCommand("1;1_window");
+    RealCommunicationChannel channel = new RealCommunicationChannel(logic);
+    logic.setCommunicationChannel(channel);
+    if (channel.open()) {
+      channel.start();
     } else {
-      Logger.error("Communcation channel could not be opened");
+      Logger.error("Communication channel could not be opened");
     }
-    // TODO - here you initiate TCP/UDP socket communication
-    // You communication class(es) may want to get reference to the logic and call necessary
-    // logic methods when events happen (for example, when sensor data is received)
-    return spawner;
+    return channel;
   }
 
-  private CommunicationChannel initiateFakeSpawner(ControlPanelLogic logic) {
-    // Here we pretend that some events will be received with a given delay
-    FakeCommunicationChannel spawner = new FakeCommunicationChannel(logic);
-    logic.setCommunicationChannel(spawner);
-    spawner.spawnNode("4;3_window", 2);
-    spawner.spawnNode("1", 3);
-    spawner.spawnNode("1", 4);
-    spawner.advertiseSensorData("4;temperature=27.4 °C,temperature=26.8 °C,humidity=80 %", 4);
-    spawner.spawnNode("8;2_heater", 5);
-    spawner.advertiseActuatorState(4, 1, true, 5);
-    spawner.advertiseActuatorState(4, 1, false, 6);
-    spawner.advertiseActuatorState(4, 1, true, 7);
-    spawner.advertiseActuatorState(4, 2, true, 7);
-    spawner.advertiseActuatorState(4, 1, false, 8);
-    spawner.advertiseActuatorState(4, 2, false, 8);
-    spawner.advertiseActuatorState(4, 1, true, 9);
-    spawner.advertiseActuatorState(4, 2, true, 9);
-    spawner.advertiseSensorData("4;temperature=22.4 °C,temperature=26.0 °C,humidity=81 %", 9);
-    spawner.advertiseSensorData("1;humidity=80 %,humidity=82 %", 10);
-    spawner.advertiseRemovedNode(8, 11);
-    spawner.advertiseRemovedNode(8, 12);
-    spawner.advertiseSensorData("1;temperature=25.4 °C,temperature=27.0 °C,humidity=67 %", 13);
-    spawner.advertiseSensorData("4;temperature=25.4 °C,temperature=27.0 °C,humidity=82 %", 14);
-    spawner.advertiseSensorData("4;temperature=25.4 °C,temperature=27.0 °C,humidity=82 %", 16);
-    return spawner;
+  private void stopCommunication(CommunicationChannel channel) {
+    RealCommunicationChannel realChannel = (RealCommunicationChannel) channel;
+    realChannel.stopSensorReading();
+    realChannel.stopCommunicationChannel();
   }
-
-  private void stopCommunication() {
-
-    if (fake) {
-      // For fake communication, no need to explicitly close anything
-      return;
-    }
-
-    ControlPanelCommunicationChannel spawner = (ControlPanelCommunicationChannel) channel;
-    if (spawner != null) {
-      spawner.close();
-    }
-  }
-    // TODO - here you stop the TCP/UDP socket communication
 }

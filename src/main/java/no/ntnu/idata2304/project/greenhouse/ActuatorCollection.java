@@ -18,7 +18,7 @@ public class ActuatorCollection implements Iterable<Actuator> {
   public void debugPrint() {
     for (Actuator actuator : actuators.values()) {
       Logger.infoNoNewline(" " + actuator.getType() + "[" + actuator.getId() + "]"
-          + (actuator.isOn() ? " ON" : " off"));
+          + (actuator.isOn() ? " on" : " off"));
     }
   }
 
@@ -39,6 +39,15 @@ public class ActuatorCollection implements Iterable<Actuator> {
    */
   public Actuator get(int id) {
     return actuators.get(id);
+  }
+
+  /**
+   * Returns all actuators.
+   *
+   * @return All actuators
+   */
+  public Map<Integer, Actuator> getAll() {
+    return this.actuators;
   }
 
   @Override

@@ -12,7 +12,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import no.ntnu.idata2304.project.CommunicationChannel;
+import no.ntnu.idata2304.project.controlpanel.CommunicationChannel;
 import no.ntnu.idata2304.project.controlpanel.ControlPanelLogic;
 import no.ntnu.idata2304.project.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.idata2304.project.greenhouse.Actuator;
@@ -125,7 +125,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
 
   @Override
   public void onActuatorStateChanged(int nodeId, int actuatorId, boolean isOn) {
-    String state = isOn ? "ON" : "off";
+    String state = isOn ? "on" : "off";
     Logger.info("actuator[" + actuatorId + "] on node " + nodeId + " is " + state);
     ActuatorPane actuatorPane = actuatorPanes.get(nodeId);
     if (actuatorPane != null) {
@@ -137,6 +137,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
           actuator.turnOff();
         }
         actuatorPane.update(actuator);
+        channel.sendActuatorChange(nodeId, actuatorId, isOn);
       } else {
         Logger.error(" actuator not found");
       }

@@ -1,8 +1,11 @@
 # Project in IDATA2304 Computer Communication and Network Programming
 
-To run the application, either:
-- Run the following line of code: "mvn javafx:run"
-- Or run the "GreenhouseGuiStarter" - class
+The project of the IDATA2304 Computer Communication and Network Programming course by group 2.
 
-A visualization of how the communication could possibly look like:
-![img.png](src/doc/img.png)
+To run the application:
+1. To run the server, run the GreenhouseStarter class.
+2. To run the client/s, run the ControlPanelStarter class for each client.
+
+A logical visualization of what the communication between the server and the client/s look like:
+
+![visual_img.jpg](src%2Fdoc%2Fvisual_img.jpg)
