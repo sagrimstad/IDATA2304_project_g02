@@ -58,7 +58,7 @@ public class RealCommunicationChannel implements CommunicationChannel {
       timer.schedule(new TimerTask() {
         @Override
         public void run() {
-          startSensorReading();
+          startReading();
         }
       }, this.delay * 1000L);
     } catch (IOException e) {
@@ -67,17 +67,25 @@ public class RealCommunicationChannel implements CommunicationChannel {
   }
 
   /**
-   * Starts the reading of sensor updates from the server.
+   * Starts the reading of commands from the server.
    */
-  public void startSensorReading() {
+  public void startReading() {
     try {
       String serverCommand;
       while (this.read) {
         serverCommand = this.socketReader.readLine();
-        try {
-          this.advertiseSensorData(serverCommand, this.delay);
-        } catch (IllegalArgumentException e) {
-          Logger.error("Invalid sensor reading, continuing to read...");
+        if (serverCommand.contains(":")) {
+          String[] parts = serverCommand.split("[;:]");
+          int nodeId = Integer.parseInt(parts[0]);
+          int actuatorId = Integer.parseInt(parts[1]);
+          boolean isOn = Boolean.parseBoolean(parts[2]);
+          this.advertiseActuatorState(nodeId, actuatorId, isOn, this.delay);
+        } else {
+          try {
+            this.advertiseSensorData(serverCommand, this.delay);
+          } catch (IllegalArgumentException e) {
+            Logger.error("Invalid sensor reading, continuing to read...");
+          }
         }
       }
     } catch (IOException e) {
