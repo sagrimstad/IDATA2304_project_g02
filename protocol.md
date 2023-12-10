@@ -62,9 +62,6 @@ Commands send:
 - Connection-orientated
 - State-full
 
-## Constants used
-different types and special values used...
-
 ## Message format
 Allowed message types:
 
