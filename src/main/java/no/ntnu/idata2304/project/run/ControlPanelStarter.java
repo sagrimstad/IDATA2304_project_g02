@@ -1,7 +1,7 @@
 package no.ntnu.idata2304.project.run;
 
-import no.ntnu.idata2304.project.controlpanel.ControlPanelLogic;
 import no.ntnu.idata2304.project.controlpanel.CommunicationChannel;
+import no.ntnu.idata2304.project.controlpanel.ControlPanelLogic;
 import no.ntnu.idata2304.project.controlpanel.RealCommunicationChannel;
 import no.ntnu.idata2304.project.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.idata2304.project.tools.Logger;
@@ -12,10 +12,7 @@ import no.ntnu.idata2304.project.tools.Logger;
  */
 public class ControlPanelStarter {
 
-  private final boolean fake;
-
-  public ControlPanelStarter(boolean fake) {
-    this.fake = fake;
+  public ControlPanelStarter() {
   }
 
   /**
@@ -26,12 +23,10 @@ public class ControlPanelStarter {
    *             communication.
    */
   public static void main(String[] args) {
-    boolean fake = false;
     if (args.length == 1 && "fake".equals(args[0])) {
-      fake = true;
       Logger.info("Using FAKE events");
     }
-    ControlPanelStarter starter = new ControlPanelStarter(fake);
+    ControlPanelStarter starter = new ControlPanelStarter();
     starter.start();
   }
 

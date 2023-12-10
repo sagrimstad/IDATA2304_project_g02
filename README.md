@@ -7,4 +7,4 @@ To run the application:
 many instances of the control panel as wanted.
 
 A visualization of how the communication could possibly look like:
-![img.jpg](src%2Fdoc%2Fimg.jpg)
+![visual_img.jpg](src%2Fdoc%2Fvisual_img.jpg)

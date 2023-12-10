@@ -44,17 +44,6 @@ public class GreenhouseApplication extends Application implements NodeStateListe
     }
   }
 
-  /**
-   * Start the GUI Application.
-   *
-   * @param fake When true, emulate fake events instead of opening real sockets
-   */
-  public static void startApp(boolean fake) {
-    Logger.info("Running greenhouse simulator with JavaFX GUI...");
-    simulator = new GreenhouseSimulator(fake);
-    launch();
-  }
-
   @Override
   public void onNodeReady(SensorActuatorNode node) {
     Logger.info("Starting window for node " + node.getId());

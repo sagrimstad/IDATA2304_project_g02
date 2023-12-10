@@ -3,7 +3,6 @@ package no.ntnu.idata2304.project.tools;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import no.ntnu.idata2304.project.greenhouse.Actuator;
 import no.ntnu.idata2304.project.greenhouse.Sensor;
 import no.ntnu.idata2304.project.greenhouse.SensorActuatorNode;
@@ -34,7 +33,7 @@ public class NodeSerializer {
    *
    * @param nodes A specified map of nodes
    * @return A list of strings containing all nodes along with their actuators on a string format
-   * serialized from a specified map of nodes
+   *         serialized from a specified map of nodes
    */
   public static List<String> toString(Map<Integer, SensorActuatorNode> nodes) {
     List<String> list = new ArrayList<>();
@@ -64,7 +63,7 @@ public class NodeSerializer {
    *
    * @param nodes A specified map of nodes
    * @return A list of strings containing all sensors for each node on a string format serialized
-   * from a specified map of nodes
+   *        from a specified map of nodes
    */
   public static List<String> toSensorString(Map<Integer, SensorActuatorNode> nodes) {
     List<String> list = new ArrayList<>();
@@ -75,8 +74,8 @@ public class NodeSerializer {
         s = s + ";";
         int count = 0;
         for (Sensor sensor : sensors) {
-          String n = "," + sensor.getType() + "=" + sensor.getReading().getValue() + " " +
-              sensor.getReading().getUnit();
+          String n = "," + sensor.getType() + "=" + sensor.getReading().getValue() + " "
+              + sensor.getReading().getUnit();
           if (count < 1) {
             n = n.substring(1, n.length());
             count++;
