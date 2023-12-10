@@ -42,7 +42,7 @@ public class ControlPanelStarter {
     ControlPanelApplication.startApp(logic, channel);
     // This code is reached only after the GUI-window is closed
     Logger.info("Exiting the control panel application");
-    stopCommunication();
+    stopCommunication(channel);
   }
 
   private CommunicationChannel initiateCommunication(ControlPanelLogic logic, boolean fake) {
@@ -96,7 +96,9 @@ public class ControlPanelStarter {
     return spawner;
   }
 
-  private void stopCommunication() {
+  private void stopCommunication(CommunicationChannel channel) {
+    RealCommunicationChannel realChannel = (RealCommunicationChannel) channel;
+    realChannel.stopSensorReading();
     // TODO - here you stop the TCP/UDP socket communication
   }
 }
