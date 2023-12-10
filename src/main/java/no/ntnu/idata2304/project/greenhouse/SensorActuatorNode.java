@@ -227,7 +227,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   }
 
   private void notifyActuatorChange(Actuator actuator) {
-    String onOff = actuator.isOn() ? "ON" : "off";
+    String onOff = actuator.isOn() ? "on" : "off";
     Logger.info(" => " + actuator.getType() + " on node " + id + " " + onOff);
     for (ActuatorListener listener : actuatorListeners) {
       listener.actuatorUpdated(id, actuator);

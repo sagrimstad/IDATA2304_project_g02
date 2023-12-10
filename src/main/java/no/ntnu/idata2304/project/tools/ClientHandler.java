@@ -107,7 +107,6 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
   private void handleActuatorChangeCommand(String command) {
     try {
       if (command != null) {
-        Logger.info(command); // temp line, only for debugging
         command = this.socketReader.readLine();
         String[] parts = command.split("[;:]");
         int nodeId = Integer.parseInt(parts[0]);

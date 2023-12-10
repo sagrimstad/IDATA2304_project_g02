@@ -45,7 +45,7 @@ public class NodeSerializer {
         s = s + ";";
         int count = 0;
         for (Actuator actuator : actuators.values()) {
-          String n = " 1_" + actuator.getType();
+          String n = " " + actuator.getId() + "_" + actuator.getType();
           if (count < 1) {
             n = n.substring(1, n.length());
             count++;

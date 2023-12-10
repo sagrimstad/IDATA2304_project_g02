@@ -40,14 +40,12 @@ public class NodeParser {
     if (actuatorInfo.length != 2) {
       throw new IllegalArgumentException("Invalid actuator info format: " + s);
     }
-    int actuatorCount = parseIntegerOrError(actuatorInfo[0],
+    int actuatorId = parseIntegerOrError(actuatorInfo[0],
         "Invalid actuator count: " + actuatorInfo[0]);
     String actuatorType = actuatorInfo[1];
-    for (int i = 0; i < actuatorCount; ++i) {
-      Actuator actuator = new Actuator(actuatorType, info.getId());
+      Actuator actuator = new Actuator(actuatorId, actuatorType, info.getId());
       actuator.setListener(logic);
       info.addActuator(actuator);
-    }
   }
 
   public static List<SensorReading> parseSensors(String sensorInfo) {
