@@ -52,7 +52,7 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
       clientRequest = this.readClientRequest();
       if (clientRequest != null) {
         Logger.info("Received " + clientRequest);
-        this.handleActuatorChangeCommand(clientRequest);
+        this.handleActuatorChangeCommand();
       }
     } while (clientRequest != null);
     Logger.info("Client " + this.socket.getRemoteSocketAddress() + " leaving");
@@ -88,27 +88,25 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
    * Handles the incoming command and changes/updates the wanted actuator to the correct state. The
    * only type of command to come from the actuator is its change in state.
    */
-  private void handleActuatorChangeCommand(String command) {
+  private void handleActuatorChangeCommand() {
+    String command;
     try {
-      if (command != null) {
-        command = this.socketReader.readLine();
-        String[] parts = command.split("[;:]");
-        int nodeId = Integer.parseInt(parts[0]);
-        int actuatorId = Integer.parseInt(parts[1]);
-        String isOn = parts[2];
+      command = this.socketReader.readLine();
+      String[] parts = command.split("[;:]");
+      int nodeId = Integer.parseInt(parts[0]);
+      int actuatorId = Integer.parseInt(parts[1]);
+      String isOn = parts[2];
 
-        SensorActuatorNode node = this.server.getNodes().get(nodeId);
-        Actuator actuator = node.getActuator(actuatorId);
+      SensorActuatorNode node = this.server.getNodes().get(nodeId);
+      Actuator actuator = node.getActuator(actuatorId);
 
-        switch (isOn) {
-          case "true" -> actuator.turnOn();
-          case "false" -> actuator.turnOff();
-          default -> Logger.error("Error while changing state for actuator: " + actuator);
-        }
-      } else {
-        Logger.error("Incorrect command: " + command);
+      switch (isOn) {
+        case "true" -> actuator.turnOn();
+        case "false" -> actuator.turnOff();
+        default -> Logger.error("Error while changing state for actuator: " + actuator);
       }
-    } catch (IOException e) {
+
+    } catch (IOException | NullPointerException e) {
       Logger.error("Error while handling actuator change: " + e.getMessage());
     }
   }
@@ -155,8 +153,8 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
   }
 
   /**
-   * Closes the socket connection along with associated input and output streams.
-   * If any of the streams or the socket itself is already closed, it does nothing.
+   * Closes the socket connection along with associated input and output streams. If any of the
+   * streams or the socket itself is already closed, it does nothing.
    */
   public void close() {
     try {

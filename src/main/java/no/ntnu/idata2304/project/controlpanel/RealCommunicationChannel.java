@@ -134,6 +134,7 @@ public class RealCommunicationChannel implements CommunicationChannel {
   }
 
   // TODO Change JavaDoc specifiation according to protocol
+
   /**
    * Advertise new sensor readings.
    *
@@ -178,8 +179,8 @@ public class RealCommunicationChannel implements CommunicationChannel {
   }
 
   /**
-   * Sends a notification of an actuator change to the
-   * connected device through the communication socket.
+   * Sends a notification of an actuator change to the connected device through the communication
+   * socket.
    *
    * @param nodeId     ID of the node to which the actuator is attached
    * @param actuatorId Node-wide unique ID of the actuator
@@ -191,8 +192,8 @@ public class RealCommunicationChannel implements CommunicationChannel {
   }
 
   /**
-   * Opens a communication channel by establishing a socket
-   * connection to the specified host and port.
+   * Opens a communication channel by establishing a socket connection to the specified host and
+   * port.
    *
    * @return true if the communication channel is successfully opened, false otherwise.
    */
@@ -215,14 +216,21 @@ public class RealCommunicationChannel implements CommunicationChannel {
    */
   public void stopCommunicationChannel() {
     if (this.socket != null) {
-      try {
-        this.socket.close();
-        this.socket = null;
-        this.socketReader = null;
-        this.socketWriter = null;
-      } catch (IOException e) {
-        Logger.error("Could not close the socket: " + e.getMessage());
-      }
+      this.delay++;
+      Timer timer = new Timer();
+      timer.schedule(new TimerTask() {
+        @Override
+        public void run() {
+          try {
+            socket.close();
+            socket = null;
+            socketReader = null;
+            socketWriter = null;
+          } catch (IOException e) {
+            Logger.error("Could not close the socket: " + e.getMessage());
+          }
+        }
+      }, delay * 1000L);
     }
   }
 }
