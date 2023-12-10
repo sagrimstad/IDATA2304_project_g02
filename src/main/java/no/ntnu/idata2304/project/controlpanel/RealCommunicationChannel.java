@@ -141,6 +141,7 @@ public class RealCommunicationChannel implements CommunicationChannel {
     }, delay * 1000L);
   }
 
+  // TODO Change JavaDoc specifiation according to protocol
   /**
    * Advertise new sensor readings.
    *
