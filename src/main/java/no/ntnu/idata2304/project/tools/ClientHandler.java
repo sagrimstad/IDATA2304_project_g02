@@ -153,6 +153,13 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
     }
   }
 
+  /**
+   * Sends an actuator change to the client when the state of that actuator is changed.
+   */
+  private void sendActuatorChangeToClient(int nodeId, int actuatorId, boolean isOn) {
+    this.socketWriter.println(nodeId + ";" + actuatorId + ":" + isOn);
+  }
+
   public void close() {
     try {
       if (this.socketWriter != null) {
@@ -171,7 +178,9 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
 
   @Override
   public void actuatorUpdated(int nodeId, Actuator actuator) {
-    //TODO: Send actuator state to control panel
+    int actuatorId = actuator.getId();
+    boolean on = actuator.isOn();
+    this.sendActuatorChangeToClient(nodeId, actuatorId, on);
   }
 
   @Override
