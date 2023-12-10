@@ -79,9 +79,9 @@ public class ClientHandler extends Thread implements ActuatorListener, SensorLis
    */
   private void initialize() {
     this.sendNodesToClient(this.server.getNodes());
-    this.sendToClient(null);
+    this.sendToClient("0");
     this.sendSensorsToClient(this.server.getNodes());
-    this.sendToClient(null);
+    this.sendToClient("0");
   }
 
   // private boolean isBroadcastMessage(Message response) {
